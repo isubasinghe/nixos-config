@@ -291,7 +291,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+
+{- myLayout = tiled ||| Mirror tiled ||| Full
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   = Tall nmaster delta ratio
@@ -303,8 +304,30 @@ myLayout = tiled ||| Mirror tiled ||| Full
     ratio   = 1/2
 
     -- Percent of screen to increment by when resizing panes
-    delta   = 3/100
+    delta   = 3/100 -}
+myLayout =
+  avoidStruts
+    . smartBorders
+    $ (tiled ||| Mirror tiled ||| column3 ||| full)
+   where
+     -- default tiling algorithm partitions the screen into two panes
+     tiled   = gapSpaced 10 $ Tall nmaster delta ratio
+     full    = gapSpaced 5 Full
+     column3 = gapSpaced 10 $ ThreeColMid 1 (3/100) (1/2)
+     grid'   = gapSpaced 10 Grid
 
+     -- The default number of windows in the master pane
+     nmaster = 1
+
+     -- Default proportion of screen occupied by master pane
+     ratio   = 1/2
+
+     -- Percent of screen to increment by when resizing panes
+     delta   = 3/100
+
+     -- Gaps bewteen windows
+     myGaps gap  = gaps [(U, gap),(D, gap),(L, gap),(R, gap)]
+     gapSpaced g = spacing g . myGaps g
 ------------------------------------------------------------------------
 -- Window rules:
 

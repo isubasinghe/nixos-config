@@ -3,4 +3,5 @@
   ./rofi
   ./eww
   ./wezterm
+  ./zsh
 ]

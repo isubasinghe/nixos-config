@@ -2,4 +2,5 @@
   ./xmonad
   ./rofi
   ./eww
+  ./wezterm
 ]

@@ -16,6 +16,7 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+    ./xmonad.nix
   ];
 
   nixpkgs = {
@@ -158,15 +159,9 @@
     (nerdfonts.override {fonts = ["JetBrainsMono"]; })
   ];
 
-  services.xserver = {
-    enable = true; 
-    layout = "au";
-    xkbVariant = "";
-    videoDrivers = ["nvidia"];
-    desktopManager.gnome.enable = true; 
-    displayManager.gdm.enable = true;
-  };
 
+  hardware.bluetooth.enable = true; 
+  services.blueman.enable = true; 
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "22.11";

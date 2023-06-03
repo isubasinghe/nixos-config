@@ -3,7 +3,7 @@
 
 { inputs, outputs, lib, config, pkgs, ... }: {
   # You can import other home-manager modules here
-  imports = [
+  imports = builtins.concatMap import [
     # If you want to use modules your own flake exports (from modules/home-manager):
     # outputs.homeManagerModules.example
 
@@ -12,6 +12,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./programs
   ];
 
   nixpkgs = {
@@ -50,6 +51,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.neovim
     pkgs.httpie 
     pkgs.jq 
     pkgs.kubectl
@@ -62,6 +64,11 @@
         ps.stack 
         ps.haskell-language-server
         ps.ormolu
+        ps.xmonad 
+        ps.X11
+        ps.xmonad-contrib
+        ps.xmonad-extras
+        ps.dbus
       ]))
     pkgs.gnumake
     (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})

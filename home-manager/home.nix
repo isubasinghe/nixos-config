@@ -13,6 +13,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./programs
+    ./services
   ];
 
   nixpkgs = {
@@ -117,6 +118,22 @@
     pkgs.helix
     pkgs.valgrind
     pkgs.elan
+    pkgs.spotify
+    pkgs.arandr
+    pkgs.asciinema
+    pkgs.libnotify
+    pkgs.multilockscreen
+    pkgs.ouch
+    pkgs.paprefs
+    pkgs.pavucontrol
+    pkgs.pasystray
+    pkgs.playerctl
+    pkgs.pulsemixer
+    pkgs.rage
+    pkgs.screenkey
+    pkgs.vlc 
+    pkgs.xsel
+    pkgs.feh
   ];
 
   # Enable home-manager and git
@@ -129,6 +146,9 @@
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
+
+
+  stylix.image = ../imgs/wallpaper.jpg;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "22.11";

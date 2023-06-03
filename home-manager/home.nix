@@ -153,7 +153,7 @@
 
   stylix.image = ../imgs/wallpaper.jpg;
 
-  colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.dracula;
+  colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "22.11";

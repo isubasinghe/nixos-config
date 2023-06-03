@@ -1,3 +1,4 @@
 [
   ./xmonad
+  ./rofi
 ]

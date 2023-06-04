@@ -100,6 +100,9 @@ import qualified DBus                                  as D
 import qualified DBus.Client                           as D
 import           XMonad.Hooks.DynamicLog
 
+-- Imports for XMobar
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -113,7 +116,7 @@ myFocusFollowsMouse = True
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 2
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -399,8 +402,7 @@ myStartupHook = return ()
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
---
-main = xmonad $ ewmhFullscreen $ ewmh defaults
+main = xmonad . ewmhFullscreen . ewmh . xmobarProp $ defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

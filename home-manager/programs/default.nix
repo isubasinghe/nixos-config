@@ -1,5 +1,6 @@
 [
   ./xmonad
+  ./xmobar
   ./rofi
   ./eww
   ./wezterm

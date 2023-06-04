@@ -67,7 +67,6 @@
         ps.shake 
         ps.stack 
         ps.haskell-language-server
-        ps.ormolu
         ps.xmonad 
         ps.X11
         ps.xmonad-contrib
@@ -75,6 +74,8 @@
         ps.dbus
       ]))
       pkgs.gnumake
+
+    pkgs.ormolu
     pkgs.yarn
     # (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})
     pkgs.nodejs

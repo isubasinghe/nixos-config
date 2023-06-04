@@ -92,12 +92,14 @@ import qualified Control.Exception                     as E
 import qualified Data.Map                              as M
 import qualified XMonad.StackSet                       as W
 import qualified XMonad.Util.NamedWindows              as W
+import XMonad.Hooks.EwmhDesktops
 
 -- Imports for Polybar --
 import qualified Codec.Binary.UTF8.String              as UTF8
 import qualified DBus                                  as D
 import qualified DBus.Client                           as D
 import           XMonad.Hooks.DynamicLog
+
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -398,7 +400,7 @@ myStartupHook = return ()
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad defaults
+main = xmonad $ ewmhFullscreen $ ewmh defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

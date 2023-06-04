@@ -153,12 +153,12 @@
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
-  stylix.image = ../imgs/wallpaper.jpg;
+  stylix.image = ../imgs/wallpaper.jpeg;
 
   colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
 
   home.file = {
-    "wallpaper.jpeg".source = ../imgs/wall.jpeg;
+    "wallpaper.jpeg".source = ../imgs/wallpaper.jpeg;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

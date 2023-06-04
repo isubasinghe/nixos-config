@@ -3,7 +3,6 @@
 let
 
   polybarOpts = ''
-    ${pkgs.xmobar}/bin/xmobar &
     ${pkgs.nitrogen}/bin/nitrogen --restore &
     ${pkgs.pasystray}/bin/pasystray &
     ${pkgs.blueman}/bin/blueman-applet &
@@ -31,7 +30,6 @@ in
     xorg.xkbcomp           # keymaps modifier
     xorg.xmodmap           # keymaps modifier
     xorg.xrandr            # display manager (X Resize and Rotate protocol)
-    xmobar
   ];
 
   xsession = {

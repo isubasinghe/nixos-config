@@ -26,6 +26,7 @@ in
     networkmanager_dmenu   # networkmanager on dmenu
     networkmanagerapplet   # networkmanager applet
     nitrogen               # wallpaper manager
+    paperview
     xcape                  # keymaps modifier
     xorg.xkbcomp           # keymaps modifier
     xorg.xmodmap           # keymaps modifier

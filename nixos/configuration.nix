@@ -65,7 +65,6 @@
 
   boot.loader.grub = {
     enable = true;
-    version = 2;
     device = "nodev";
     useOSProber = true;
   };
@@ -74,7 +73,6 @@
   hardware = {
     pulseaudio.enable = false; 
     opengl.enable = true;
-    video.hidpi.enable = lib.mkDefault true;
   };
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
@@ -113,11 +111,13 @@
   # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;
-    # Forbid root login through SSH.
-    permitRootLogin = "no";
-    # Use keys only. Remove if you want to SSH using password (not recommended)
-    passwordAuthentication = false;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
   };
+
+  services.dbus.enable = true;
 
   sound.enable = true; 
   security.rtkit.enable = true;
@@ -164,5 +164,5 @@
   services.blueman.enable = true; 
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 }

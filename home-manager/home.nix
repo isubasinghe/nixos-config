@@ -74,13 +74,13 @@
         ps.xmonad-extras
         ps.dbus
       ]))
-    pkgs.gnumake
-    (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})
-    pkgs.nodejs-19_x
+      pkgs.gnumake
+    pkgs.yarn
+    # (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})
+    pkgs.nodejs
     pkgs.lsof
     pkgs.vscode
     pkgs.gopls
-    pkgs.rust-analyzer
     pkgs.ccls
     (pkgs.nodePackages.typescript-language-server)
     (pkgs.nodePackages.pyright)
@@ -137,6 +137,7 @@
     pkgs.vlc 
     pkgs.xsel
     pkgs.feh
+    pkgs.ffmpeg
   ];
 
   # Enable home-manager and git
@@ -146,7 +147,6 @@
     userName = "isubasinghe";
     userEmail = "isubasinghe@student.unimelb.edu.au";
   };
-
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
@@ -156,5 +156,5 @@
   colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "22.11";
+  home.stateVersion = "23.05";
 }

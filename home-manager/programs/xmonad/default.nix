@@ -3,6 +3,7 @@
 let
 
   polybarOpts = ''
+    ${pkgs.feh}/bin/feh --bg-scale /home/isithas/wallpaper.jpeg &
     ${pkgs.nitrogen}/bin/nitrogen --restore &
     ${pkgs.pasystray}/bin/pasystray &
     ${pkgs.blueman}/bin/blueman-applet &

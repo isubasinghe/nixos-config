@@ -157,6 +157,10 @@
 
   colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
 
+  home.file = {
+    "wallpaper.jpeg".source = ../imgs/wall.jpeg;
+  };
+
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.05";
 }

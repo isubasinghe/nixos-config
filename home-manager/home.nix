@@ -151,6 +151,8 @@
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 
+  systemd.services = [pkgs.dconf];
+
 
   stylix.image = ../imgs/wallpaper.jpg;
 

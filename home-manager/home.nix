@@ -149,7 +149,6 @@
     userEmail = "isubasinghe@student.unimelb.edu.au";
   };
 
-  programs.dconf.enable = true;
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 

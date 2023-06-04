@@ -7,7 +7,7 @@
           { font        = "JetBrains Mono"
           , borderColor = "#d0d0d0"
           , border      = FullB
-          , borderWidth = 3
+          , borderWidth = 0
           , bgColor     = "#222"
           , fgColor     = "grey"
           , position    = TopSize C 99 30
@@ -20,7 +20,7 @@
               ]
           , sepChar     = "%"
           , alignSep    = "}{"
-          , template    = "  %StdinReader% | %cpu% | %memory% | %enp3s0%  }{%date%  "
+          , template    = " %cpu% | %memory% | %enp3s0%  }{%date%  "
       }
     '';
   };

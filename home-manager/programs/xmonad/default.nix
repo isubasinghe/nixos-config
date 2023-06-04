@@ -3,7 +3,6 @@
 let
 
   polybarOpts = ''
-    ${pkgs.feh}/bin/feh --bg-scale /home/isithas/wallpaper.jpeg &
     ${pkgs.pasystray}/bin/pasystray &
     ${pkgs.blueman}/bin/blueman-applet &
     ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable --indicator &

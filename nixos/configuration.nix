@@ -164,7 +164,14 @@
 
   hardware.bluetooth.enable = true; 
   services.blueman.enable = true; 
-
+  security.polkit.enable = true;
+  networking.extraHosts = ''
+    127.0.0.1 dex
+    127.0.0.1 minio
+    127.0.0.1 postgres
+    127.0.0.1 mysql
+    127.0.0.1 azurite
+  '';
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";
 }

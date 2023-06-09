@@ -49,6 +49,7 @@ in
         set_environment_variables = {
           TERM = 'wezterm',
         },
+        default_prog = { "zsh" },
       }
     '';
   };

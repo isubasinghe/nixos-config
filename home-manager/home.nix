@@ -72,6 +72,7 @@
         ps.xmonad-contrib
         ps.xmonad-extras
         ps.dbus
+        ps.turtle
       ]))
       pkgs.gnumake
 
@@ -128,6 +129,7 @@
     pkgs.libnotify
     pkgs.multilockscreen
     pkgs.ouch
+    pkgs.gnome.nautilus
     pkgs.paprefs
     pkgs.pavucontrol
     pkgs.pasystray
@@ -139,6 +141,7 @@
     pkgs.xsel
     pkgs.feh
     pkgs.ffmpeg
+    pkgs.nil
   ];
 
   # Enable home-manager and git
@@ -161,6 +164,8 @@
     "wallpaper.jpeg".source = ../imgs/wallpaper.jpeg;
   };
 
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   home.stateVersion = "23.05";
 }

@@ -1,5 +1,5 @@
 [
   # ./polybar 
   ./picom
-  ./xmobar
+  # ./xmobar
 ]

@@ -1,0 +1,4 @@
+nix:
+  enable: true
+  path: 
+    - "nixpkgs=https://github.com/NixOs/nixpkgs/archive/23.05.tar.gz"

@@ -168,6 +168,10 @@
     "wallpaper.jpeg".source = ../imgs/wallpaper.jpeg;
   };
 
+  home.file = {
+    ".stack/config.yaml".source = ./programs/stack/config.yaml;
+  };
+
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

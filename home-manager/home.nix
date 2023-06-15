@@ -64,6 +64,7 @@
     pkgs.kube3d
     pkgs.rustup
     (pkgs.haskellPackages.ghcWithPackages (ps: [ 
+        ps.stack 
         ps.shake 
         ps.haskell-language-server
         ps.xmonad 
@@ -73,7 +74,6 @@
         ps.dbus
         ps.turtle
       ]))
-    pkgs.stack
     pkgs.gnumake
     pkgs.ormolu
     pkgs.yarn

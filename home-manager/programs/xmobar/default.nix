@@ -16,11 +16,20 @@
               , Run Network "enp3s0" ["-S", "True", "-t", "eth: <fc=#4eb4fa><rx></fc>/<fc=#4eb4fa><tx></fc>"] 10
               , Run Memory ["-t","mem: <fc=#4eb4fa><usedbar> <usedratio>%</fc>"] 10
               , Run Date "date: <fc=#4eb4fa>%a %d %b %Y %H:%M:%S </fc>" "date" 10
+              , Run Weather "YSSY"
+                        [ "--template", "<weather> <tempC>°C"
+                        , "-L", "0"
+                        , "-H", "25"
+                        , "--low"   , "lightblue"
+                        , "--normal", "#f8f8f2"
+                        , "--high"  , "red"
+                        ] 36000
               , Run StdinReader
+              , Run XMonadLog
               ]
           , sepChar     = "%"
           , alignSep    = "}{"
-          , template    = " %cpu% | %memory% | %enp3s0%  }{%date%  "
+          , template    = " %XMonadLog% }{ | %cpu% | %memory% | %date%  | %YSSY% "
       }
     '';
   };

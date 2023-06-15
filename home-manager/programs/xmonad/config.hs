@@ -69,6 +69,7 @@ import           XMonad.Prompt                         ( XPConfig(..)
                                                        , XPPosition(CenteredAt)
                                                        )
 import           XMonad.Util.EZConfig                  ( mkNamedKeymap )
+import XMonad.Util.Ungrab (unGrab)
 import           XMonad.Util.NamedActions              ( (^++^)
                                                        , NamedAction (..)
                                                        , addDescrKeys'
@@ -172,8 +173,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
-    -- launch dmenu
+    -- launch rofi
     , ((modm,               xK_p     ), spawn appLauncher)
+    
+    -- screenshot
+    , ((modm, xK_s), unGrab *> spawn "scrot -s")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")

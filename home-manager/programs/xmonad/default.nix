@@ -29,6 +29,7 @@ in
     xorg.xkbcomp           # keymaps modifier
     xorg.xmodmap           # keymaps modifier
     xorg.xrandr            # display manager (X Resize and Rotate protocol)
+    scrot
   ];
 
   xsession = {

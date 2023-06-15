@@ -65,7 +65,6 @@
     pkgs.rustup
     (pkgs.haskellPackages.ghcWithPackages (ps: [ 
         ps.shake 
-        ps.stack 
         ps.haskell-language-server
         ps.xmonad 
         ps.X11
@@ -74,8 +73,8 @@
         ps.dbus
         ps.turtle
       ]))
-      pkgs.gnumake
-
+    pkgs.stack
+    pkgs.gnumake
     pkgs.ormolu
     pkgs.yarn
     # (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})
@@ -142,6 +141,11 @@
     pkgs.feh
     pkgs.ffmpeg
     pkgs.nil
+    pkgs.zettlr
+    pkgs.zathura
+    pkgs.pkg-config
+    pkgs.openssl
+    pkgs.z3
   ];
 
   # Enable home-manager and git

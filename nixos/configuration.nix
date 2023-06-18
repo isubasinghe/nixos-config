@@ -69,6 +69,13 @@
     useOSProber = true;
   };
 
+  boot.binfmt.emulatedSystems = [
+    "x86_64-windows"
+    "riscv64-linux"
+    "wasm64-wasi"
+    "aarch64-linux"
+  ];
+
 
   hardware = {
     pulseaudio.enable = false; 

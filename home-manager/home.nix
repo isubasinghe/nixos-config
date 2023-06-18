@@ -146,6 +146,9 @@
     pkgs.pkg-config
     pkgs.openssl
     pkgs.z3
+    pkgs.xclip
+    pkgs.franz
+    pkgs.jami
   ];
 
   # Enable home-manager and git

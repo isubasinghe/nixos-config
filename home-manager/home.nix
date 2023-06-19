@@ -150,6 +150,7 @@
     pkgs.franz
     pkgs.jami
     pkgs.riff
+    pkgs.nixopsUnstable
   ];
 
   # Enable home-manager and git

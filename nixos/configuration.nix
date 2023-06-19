@@ -137,6 +137,7 @@
   };
 
   services.hydra = {
+    package = pkgs.hydra_unstable;
     enable = true;
     port = 3030;
     hydraURL = "http://localhost:3030";

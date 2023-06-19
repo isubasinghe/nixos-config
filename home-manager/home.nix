@@ -149,6 +149,7 @@
     pkgs.xclip
     pkgs.franz
     pkgs.jami
+    pkgs.riff
   ];
 
   # Enable home-manager and git

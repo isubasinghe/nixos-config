@@ -136,6 +136,15 @@
     socketActivation = true;
   };
 
+  services.hydra = {
+    enable = true;
+    port = 3030;
+    hydraURL = "http://localhost:3030";
+    notificationSender = "hydra@localhost";
+    buildMachinesFiles = [];
+    useSubstitutes = true;
+  };
+
   virtualisation.docker = {
     enable = true;
   };

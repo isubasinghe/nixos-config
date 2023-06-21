@@ -16,6 +16,7 @@
       ];
     };
     initExtra = ''
+      eval $(${pkgs.mcfly}/bin/mcfly init zsh)
     '';
   };
 }

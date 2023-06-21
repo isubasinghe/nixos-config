@@ -151,6 +151,8 @@
     pkgs.jami
     pkgs.riff
     pkgs.nixopsUnstable
+    pkgs.ipe
+    pkgs.joshuto
   ];
 
   # Enable home-manager and git

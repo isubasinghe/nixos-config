@@ -17,6 +17,7 @@
     };
     initExtra = ''
       eval $(${pkgs.mcfly}/bin/mcfly init zsh)
+      path+=($HOME/.cargo/bin)
     '';
   };
 }

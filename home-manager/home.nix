@@ -163,6 +163,20 @@
     userEmail = "isubasinghe@student.unimelb.edu.au";
   };
 
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs29-nox;
+    extraPackages = es: [
+      es.lsp-mode
+      es.evil
+      es.haskell-mode
+      es.magit
+      es.agda2-mode
+      es.idris2-mode
+      es.corfu
+    ];
+  };
+
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

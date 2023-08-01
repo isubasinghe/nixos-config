@@ -153,6 +153,8 @@
     pkgs.nixopsUnstable
     pkgs.ipe
     pkgs.joshuto
+    pkgs.screen 
+    pkgs.minicom
   ];
 
   # Enable home-manager and git

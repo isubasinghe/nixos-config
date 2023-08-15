@@ -81,9 +81,6 @@
 
   boot.binfmt.emulatedSystems = [
     "x86_64-windows"
-    "riscv64-linux"
-    "wasm64-wasi"
-    "aarch64-linux"
   ];
 
 
@@ -156,6 +153,7 @@
     useSubstitutes = true;
   };
 
+
   virtualisation.docker = {
     enable = true;
   };
@@ -189,6 +187,7 @@
   programs.dconf.enable = true;
 
   hardware.bluetooth.enable = true; 
+  hardware.cpu.amd.updateMicrocode = true;
   services.blueman.enable = true; 
   security.polkit.enable = true;
   networking.extraHosts = ''

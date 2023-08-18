@@ -186,6 +186,20 @@
 
   programs.dconf.enable = true;
 
+  services.tftpd = { 
+    enable = true;
+    path = "/srv/tftp";
+  };
+
+  services.fail2ban = {
+    enable = true;
+  };
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 ];
+  };
+
   hardware.bluetooth.enable = true; 
   hardware.cpu.amd.updateMicrocode = true;
   services.blueman.enable = true; 

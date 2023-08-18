@@ -193,7 +193,7 @@
   };
 
   services.fail2ban = {
-    enable = true;
+    enable = false;
   };
 
   networking.firewall = {

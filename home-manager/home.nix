@@ -64,7 +64,6 @@
     pkgs.kube3d
     pkgs.rustup
     (pkgs.haskellPackages.ghcWithPackages (ps: [ 
-        ps.stack 
         ps.shake 
         ps.haskell-language-server
         ps.xmonad 
@@ -73,6 +72,7 @@
         ps.xmonad-extras
         ps.dbus
         ps.turtle
+        ps.stack
       ]))
     pkgs.gnumake
     pkgs.ormolu
@@ -155,6 +155,7 @@
     pkgs.joshuto
     pkgs.screen 
     pkgs.minicom
+    pkgs.python3Full
   ];
 
   # Enable home-manager and git

@@ -16,7 +16,7 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
-    # ./xmonad.nix
+    ./xmonad.nix
   ];
 
   nixpkgs = {
@@ -64,6 +64,9 @@
       ];
       substituters = [
         "https://cache.iog.io"
+      ];
+      trusted-users = [
+        "isithas"
       ];
     };
   };

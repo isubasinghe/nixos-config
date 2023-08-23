@@ -17,6 +17,8 @@
 
     nix-colors.url = "github:misterio77/nix-colors";
 
+    attic.url = "github:zhaofengli/attic";
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
 

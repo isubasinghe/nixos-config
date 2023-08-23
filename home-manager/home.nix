@@ -43,6 +43,8 @@
       allowUnfree = true;
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
       allowUnfreePredicate = (_: true);
+
+      allowBroken = true;
     };
   };
 
@@ -55,6 +57,9 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.verible
+    pkgs.verilator
+    pkgs.cachix
     pkgs.neovim
     pkgs.httpie 
     pkgs.jq 
@@ -156,6 +161,7 @@
     pkgs.screen 
     pkgs.minicom
     pkgs.python3Full
+    pkgs.obs-studio
   ];
 
   # Enable home-manager and git

@@ -57,6 +57,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.verifast
     pkgs.whatsapp-for-linux
     pkgs.zotero
     pkgs.kdash

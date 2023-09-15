@@ -27,8 +27,7 @@
       outputs.overlays.modifications
       outputs.overlays.unstable-packages
 
-      # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
+      # You can also add overlays exported from other flakes: neovim-nightly-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -57,6 +56,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.nix-output-monitor
     pkgs.verifast
     pkgs.whatsapp-for-linux
     pkgs.zotero

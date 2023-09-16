@@ -166,6 +166,7 @@
     pkgs.minicom
     pkgs.python3Full
     pkgs.obs-studio
+    pkgs.scc
   ];
 
   # Enable home-manager and git

@@ -82,6 +82,7 @@
         ps.dbus
         ps.turtle
         ps.stack
+        ps.language-c
       ]))
     pkgs.gnumake
     pkgs.ormolu

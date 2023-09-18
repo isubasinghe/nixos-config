@@ -109,6 +109,7 @@
     pkgs.du-dust
     pkgs.tealdeer
     pkgs.delta
+    pkgs.exa
     pkgs.duf
     pkgs.fd
     pkgs.ripgrep
@@ -168,6 +169,7 @@
     pkgs.python3Full
     pkgs.obs-studio
     pkgs.scc
+    pkgs.lynx
   ];
 
   # Enable home-manager and git

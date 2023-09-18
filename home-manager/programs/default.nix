@@ -9,4 +9,5 @@
   ./zsh
   ./starship
   ./tmux
+  ./zoxide
 ]

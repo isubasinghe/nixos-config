@@ -12,5 +12,7 @@
       tmuxPlugins.copycat
       tmuxPlugins.yank
     ];
+    extraConfig = ''
+    '';
   };
 }

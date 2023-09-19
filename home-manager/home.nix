@@ -56,6 +56,9 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.infra
+    pkgs.croc
+    pkgs.tig
     pkgs.nix-output-monitor
     pkgs.verifast
     pkgs.whatsapp-for-linux
@@ -178,6 +181,16 @@
     enable = true;
     userName = "isubasinghe";
     userEmail = "isubasinghe@student.unimelb.edu.au";
+    difftastic = {
+      enable = true;
+    };
+    aliases = {
+      co = "checkout";
+      cob = "checkout -b";
+      c = "commit --signoff -m";
+      bv = "branch -v";
+      rv = "remote -v";
+    };
   };
 
   programs.emacs = {

@@ -69,7 +69,6 @@
     pkgs.verible
     pkgs.verilator
     pkgs.cachix
-    pkgs.neovim
     pkgs.httpie 
     pkgs.jq 
     pkgs.kubectl

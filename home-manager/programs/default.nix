@@ -10,4 +10,5 @@
   ./starship
   ./tmux
   ./zoxide
+  ./neovim
 ]

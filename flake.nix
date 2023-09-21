@@ -19,6 +19,11 @@
 
     attic.url = "github:zhaofengli/attic";
 
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
 
@@ -27,7 +32,7 @@
     # nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, stylix, nix-colors, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, stylix, nix-colors, attic, nixvim, ... }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -81,6 +86,7 @@
           modules = [
             # > Our main home-manager configuration file <
             stylix.homeManagerModules.stylix ./home-manager/home.nix
+            nixvim.homeManagerModules.nixvim
           ];
         };
       };

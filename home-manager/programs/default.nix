@@ -1,7 +1,6 @@
 [
   ./xmonad
   ./xmobar
-  # ./hyprland
   ./rofi
   ./wofi
   ./eww
@@ -10,4 +9,5 @@
   ./starship
   ./tmux
   ./zoxide
+  ./neovim
 ]

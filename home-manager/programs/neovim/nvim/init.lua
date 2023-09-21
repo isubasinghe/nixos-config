@@ -165,7 +165,7 @@ require'lualine'.setup{
 
 
 
-vim.cmd[[colorscheme noctis]]
+vim.cmd[[colorscheme rose-pine]]
 vim.cmd[[highlight LineNr ctermfg=Grey guifg=Grey]]
 
 

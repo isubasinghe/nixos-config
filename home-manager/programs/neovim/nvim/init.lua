@@ -19,6 +19,7 @@ require('packer').init {
 local use = require('packer').use
 
 require('packer').startup(function()
+  use({ 'rose-pine/neovim', as = 'rose-pine' })
   use 'wbthomason/packer.nvim'
   use 'folke/lsp-colors.nvim'  
   use {

@@ -67,6 +67,13 @@
             ./nixos/configuration.nix
           ];
         };
+        vb-100 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main nixos configuration file <
+            ./nixos/lab-config.nix
+          ];
+        };
       };
 
       # Standalone home-manager configuration entrypoint
@@ -78,6 +85,14 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/home.nix
+          ];
+        };
+        "isithas@vb-100" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            # > Our main home-manager configuration file <
+            stylix.homeManagerModules.stylix ./home-manager/home.nix
           ];
         };
       };

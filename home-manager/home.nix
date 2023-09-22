@@ -76,6 +76,7 @@ in
     pkgs.reptyr
     pkgs.age
     pkgs.pass
+    pkgs.matterhorn
     pkgs.infra
     pkgs.croc
     pkgs.tig
@@ -218,7 +219,7 @@ in
   programs.git = {
     enable = true;
     userName = "isubasinghe";
-    userEmail = "isubasinghe@student.unimelb.edu.au";
+    userEmail = "i.subasinghe@unsw.edu.au";
     difftastic = {
       enable = true;
     };

@@ -174,6 +174,7 @@
     pkgs.obs-studio
     pkgs.scc
     pkgs.lynx
+    pkgs.tlaplusToolbox
   ];
 
   # Enable home-manager and git

@@ -2,7 +2,17 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
 { inputs, outputs, lib, config, pkgs, ... }: 
-
+let
+  z3-4-12-2 = pkgs.z3.overrideAttrs(old: rec {
+    pname = "z3";
+    src = pkgs.fetchFromGitHub {
+        owner = "Z3Prover";
+        repo = pname;
+        rev = "z3-4.12.2";
+        sha256 = "sha256-DTgpKEG/LtCGZDnicYvbxG//JMLv25VHn/NaF307JYA=";
+    };
+  });
+in
 {
   # You can import other home-manager modules here
   imports = (builtins.concatMap import [
@@ -52,6 +62,7 @@
     username = "isithas";
     homeDirectory = "/home/isithas";
   };
+
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
@@ -160,7 +171,6 @@
     pkgs.zathura
     pkgs.pkg-config
     pkgs.openssl
-    pkgs.z3
     pkgs.xclip
     pkgs.franz
     pkgs.jami
@@ -170,11 +180,27 @@
     pkgs.joshuto
     pkgs.screen 
     pkgs.minicom
-    pkgs.python3Full
+    (pkgs.python311.withPackages (p: with p; [
+      jsonpatch
+      pyyaml
+      kubernetes
+      deepdiff
+      exrex
+      jsonschema
+      pandas
+      requests
+      tabulate
+      pytest
+      pydantic
+      pytest-cov
+    ]))
     pkgs.obs-studio
     pkgs.scc
     pkgs.lynx
     pkgs.tlaplusToolbox
+    pkgs.unzip
+    z3-4-12-2
+    pkgs.isabelle
   ];
 
   # Enable home-manager and git

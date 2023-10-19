@@ -209,6 +209,12 @@
   hardware.cpu.amd.updateMicrocode = true;
   services.blueman.enable = true; 
   security.polkit.enable = true;
+
+  services.jellyfin = {
+    enable = true;
+    openFirewall = true;
+    user = "jellyfin";
+  };
   networking.extraHosts = ''
     127.0.0.1 dex
     127.0.0.1 minio

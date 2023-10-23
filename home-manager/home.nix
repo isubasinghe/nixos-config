@@ -171,6 +171,7 @@ in
     pkgs.zathura
     pkgs.pkg-config
     pkgs.openssl
+    pkgs.racket
     pkgs.xclip
     pkgs.franz
     pkgs.jami
@@ -201,6 +202,7 @@ in
     pkgs.unzip
     z3-4-12-2
     pkgs.isabelle
+    pkgs.insomnia
   ];
 
   # Enable home-manager and git

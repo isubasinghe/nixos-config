@@ -67,6 +67,7 @@ in
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.reptyr
     pkgs.age
     pkgs.pass
     pkgs.infra

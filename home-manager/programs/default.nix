@@ -1,7 +1,6 @@
 [
   ./xmonad
   ./xmobar
-  # ./hyprland
   ./rofi
   ./wofi
   ./eww

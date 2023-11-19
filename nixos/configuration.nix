@@ -211,7 +211,7 @@
   security.polkit.enable = true;
 
   services.jellyfin = {
-    enable = false; 
+    enable = true; 
     openFirewall = true;
     user = "jellyfin";
   };

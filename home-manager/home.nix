@@ -54,6 +54,11 @@ in
       allowUnfreePredicate = (_: true);
 
       allowBroken = true;
+
+      permittedInsecurePackages = [
+        "python3.10-requests-2.28.2"
+        "python3.10-cryptography-40.0.1"
+      ];
     };
   };
 
@@ -140,8 +145,6 @@ in
     pkgs.htop
     pkgs.gh
     (pkgs.google-cloud-sdk.withExtraComponents ([pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin]))
-    pkgs.octant
-    pkgs.octant-desktop
     pkgs.k9s
     pkgs.kubespy
     pkgs.gitui
@@ -184,13 +187,13 @@ in
     pkgs.minicom
     (pkgs.python311.withPackages (p: with p; [
       jsonpatch
+      requests
       pyyaml
       kubernetes
       deepdiff
       exrex
       jsonschema
       pandas
-      requests
       tabulate
       pytest
       pydantic
@@ -204,6 +207,9 @@ in
     z3-4-12-2
     pkgs.isabelle
     pkgs.insomnia
+    (pkgs.agda.withPackages (ps: [
+      ps.standard-library
+    ]))
   ];
 
   # Enable home-manager and git
@@ -241,8 +247,6 @@ in
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
-
-  stylix.image = ../imgs/wallpaper.jpeg;
 
   colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
 

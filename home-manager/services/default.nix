@@ -2,4 +2,5 @@
   # ./polybar 
   ./picom
   # ./xmobar
+  ./feh
 ]

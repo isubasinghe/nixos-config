@@ -72,6 +72,7 @@ in
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.gnome.cheese
     pkgs.reptyr
     pkgs.age
     pkgs.pass
@@ -210,6 +211,7 @@ in
     (pkgs.agda.withPackages (ps: [
       ps.standard-library
     ]))
+    pkgs.nix-index
   ];
 
   # Enable home-manager and git

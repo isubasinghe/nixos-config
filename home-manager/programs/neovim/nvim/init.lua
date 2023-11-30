@@ -1,4 +1,17 @@
-vim.cmd [[packadd packer.nvim]]
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+
 -- vim.opt.number = true
 vim.opt.termguicolors=true
 vim.opt.expandtab=true
@@ -10,106 +23,90 @@ vim.opt.background='dark'
 vim.opt.mouse = 'a'
 vim.opt.completeopt='menuone,noselect'
 
-require('packer').init {
-  git = {
-    clone_timeout = 1024,
+require("lazy").setup({
+  { 'rose-pine/neovim', name='rose-pine' },
+  { 'nvim-treesitter/nvim-treesitter', build=":TSUpdate" },
+  { 'neovim/nvim-lspconfig' },
+  { 'hrsh7th/cmp-nvim-lsp' },
+  { 'hrsh7th/cmp-buffer' },
+  { 'hrsh7th/nvim-cmp' },
+  { 'hrsh7th/vim-vsnip' },
+  { 'simrat39/rust-tools.nvim' },
+  { 'kyazdani42/nvim-web-devicons' },
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+    },
+    config = true
   },
-}
-
-local use = require('packer').use
-
-require('packer').startup(function()
-  use({ 'rose-pine/neovim', as = 'rose-pine' })
-  use 'wbthomason/packer.nvim'
-  use 'folke/lsp-colors.nvim'  
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
-  }
-  use 'neovim/nvim-lspconfig'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/vim-vsnip'
-  use 'simrat39/rust-tools.nvim'
-  use 'kyazdani42/nvim-web-devicons'
-  use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
-  -- Lua
-  use {
+  {
     "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+    },
+  },
+  {"ellisonleao/glow.nvim", config = true, cmd = "Glow"},
+  { 'sbdchd/neoformat' },
+  { 'b3nj5m1n/kommentary' },
+  { 'herringtondarkholme/yats.vim' },
+  {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
     config = function()
-      require("trouble").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
+      require("nvim-tree").setup {
+        actions = {
+          open_file = {
+            quit_on_open = true
+          }
+        } 
       }
-    end
-  }
-  use 'ellisonleao/glow.nvim'
-  use 'sbdchd/neoformat'
-  use 'b3nj5m1n/kommentary'
-  use 'herringtondarkholme/yats.vim'
-  use {
-    'kyazdani42/nvim-tree.lua',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function() require'nvim-tree'.setup {
-      actions = {
-        open_file = {
-          quit_on_open = true
-        }
-      }
-    } end
-  }
-  use 'lervag/vimtex'
-  use 'neovimhaskell/haskell-vim'
-  use 'andy-morris/happy.vim'
-  use 'andy-morris/alex.vim'
-  use 'neomake/neomake'
-  use 'fatih/vim-go'
-  use {
+    end,
+  },
+  {
+    'mrcjkb/haskell-tools.nvim',
+    version = '^3', -- Recommended
+    ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
+  },
+  { 'fatih/vim-go' },
+  { 'lervag/vimtex' },
+  {
     'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true}
-  }
-  use "lukas-reineke/indent-blankline.nvim"
-  use "APZelos/blamer.nvim"
-  use 'junegunn/fzf'
-  use 'junegunn/fzf.vim'
-  use {
+    dependencies = {'kyazdani42/nvim-web-devicons', opt = true}
+  },
+  { "lukas-reineke/indent-blankline.nvim" },
+  { "APZelos/blamer.nvim" },
+  {'junegunn/fzf' },
+  {  'junegunn/fzf.vim' },
+  {
     'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
     config = function() 
       require("lsp_lines").setup()
     end,
+  },
+  { 'nvim-focus/focus.nvim', version = '*' },
+  { 'ThePrimeagen/harpoon', dependencies = 'nvim-lua/plenary.nvim' },
+  { 'mfussenegger/nvim-dap' },
+  { 'airblade/vim-gitgutter' },
+  { 'sindrets/diffview.nvim', dependencies = 'nvim-lua/plenary.nvim' },
+  { 'nvim-treesitter/nvim-treesitter-textobjects' },
+  { 'kvrohit/rasmus.nvim' },
+  { 'ggandor/leap.nvim' },
+  { 'Everblush/everblush.nvim', name = 'everblush' },
+  { 'Julian/lean.nvim' },
+  {'ShinKage/idris2-nvim', dependencies = {'neovim/nvim-lspconfig', 'MunifTanjim/nui.nvim'}},
+  { 'arkav/lualine-lsp-progress' },
+  { 'kartikp10/noctis.nvim', dependencies = { 'rktjmp/lush.nvim' } },
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.4',
+      dependencies = { 'nvim-lua/plenary.nvim' }
   }
-  use { "beauwilliams/focus.nvim", config = function() require("focus").setup() end }
-  use { 'ThePrimeagen/harpoon', requires = 'nvim-lua/plenary.nvim' }
-  use 'vim-scripts/promela.vim'
-  use 'mfussenegger/nvim-dap'
-  use 'airblade/vim-gitgutter'
-  use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
-  use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'kvrohit/rasmus.nvim'
-  use 'B4mbus/oxocarbon-lua.nvim'
-  use 'ggandor/leap.nvim'
-  use { 'Everblush/everblush.nvim', as = 'everblush' }
-  use 'Julian/lean.nvim'
-  use {'ShinKage/idris2-nvim', requires = {'neovim/nvim-lspconfig', 'MunifTanjim/nui.nvim'}}
-  use 'arkav/lualine-lsp-progress'
-  use { 'kartikp10/noctis.nvim', requires = { 'rktjmp/lush.nvim' } }
-  use {
-  'nvim-telescope/telescope.nvim', tag = '0.1.2',
--- or                            , branch = '0.1.x',
-  requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use {
-    'mrcjkb/haskell-tools.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim',
-    },
-    branch = '1.x.x', -- recommended
-  }
-  use 'MrcJkb/telescope-manix'
-end)
+})
+
 
 local telescope = require('telescope')
 telescope.setup{
@@ -143,7 +140,6 @@ telescope.setup{
   }
 }
 
-
 -- Disable virtual_text since it's redundant due to lsp_lines.
 vim.diagnostic.config({
   virtual_text = false,
@@ -163,25 +159,20 @@ require'lualine'.setup{
 	}
 }
 
-
-
 vim.cmd[[colorscheme rose-pine]]
 vim.cmd[[highlight LineNr ctermfg=Grey guifg=Grey]]
-
 
 local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
 
 
 require('nvim-treesitter.configs').setup {
-	ensure_installed = { "go", "haskell", "cpp", "c", "rust", "javascript", "typescript" }
+	ensure_installed = { "go", "haskell", "cpp", "c", "rust", "javascript", "typescript", "agda", "bash", "bibtex", "capnp", "css", "devicetree", "llvm", "latex", "ledger", "lua", "make", "nix", "proto" }
 }
-
-
 
 local nvim_lsp = require('lspconfig')
 
 
-local other_on_attach = function(_, bufnr)
+other_on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   local opts = { noremap = true, silent = true }
@@ -266,34 +257,6 @@ for _,lsp in ipairs(servers) do
   }
 end
 
-
--- Rust specific config 
-local rt = require("rust-tools")
-
-rt.setup({
-  server = {
-    on_attach = function(param0, bufnr)
-      other_on_attach(param0, bufnr)
-
-      -- Hover actions
-      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- Code action groups
-      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-    end,
-    capabilities = capabilities,
-  },
-})
-
--- Idris2 
-require('idris2').setup({server = {on_attach = other_on_attach}})
-
-require('lean').setup{
-  abbreviations = { builtin = true },
-  lsp = { on_attach = other_on_attach },
-  lsp3 = { on_attach = other_on_attach },
-  mappings = true,
-}
-
 -- treesitter textobjects
 require'nvim-treesitter.configs'.setup {
   textobjects = {
@@ -325,7 +288,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
-
 require('leap').set_default_keymaps()
 
 require'nvim-web-devicons'.setup {
@@ -344,14 +306,6 @@ require'nvim-web-devicons'.setup {
 }
 
 require('kommentary.config').use_extended_mappings()
-
-
--- VimTex 
-vim.g.tex_flavor='latex'
-vim.g.vimtex_view_method='zathura'
-vim.g.vimtex_quickfix_mode=0
-vim.api.nvim_command('set conceallevel=2')
-vim.g.tex_conceal='abdmg'
 
 vim.api.nvim_set_keymap('', '<space>ff', ':NvimTreeToggle<cr>', { silent = true, noremap = true })
 vim.api.nvim_set_keymap('', '<space>gg', ':Neogit<cr>', { silent = true, noremap = true })
@@ -401,6 +355,8 @@ vim.api.nvim_set_keymap("", '<space>bm', ':lua require("harpoon.ui").toggle_quic
 vim.api.nvim_set_keymap("", '<space>fd', ':FZF<cr>',
   {silent = true, noremap = true}
 )
+
+
 
 vim.api.nvim_exec([[autocmd FileType haskell nnoremap <buffer> <space>fm :Neoformat! haskell ormolu<cr>]], false)
 vim.api.nvim_exec([[autocmd FileType go nnoremap <buffer> <space>fm :Neoformat! go gofumpt<cr>]], false)

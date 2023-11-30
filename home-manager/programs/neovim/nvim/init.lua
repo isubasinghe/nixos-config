@@ -257,6 +257,34 @@ for _,lsp in ipairs(servers) do
   }
 end
 
+
+-- Rust specific config 
+local rt = require("rust-tools")
+
+rt.setup({
+  server = {
+    on_attach = function(param0, bufnr)
+      other_on_attach(param0, bufnr)
+
+      -- Hover actions
+      vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+      -- Code action groups
+      vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+    end,
+    capabilities = capabilities,
+  },
+})
+
+-- Idris2 
+require('idris2').setup({server = {on_attach = other_on_attach}})
+
+require('lean').setup{
+  abbreviations = { builtin = true },
+  lsp = { on_attach = other_on_attach },
+  lsp3 = { on_attach = other_on_attach },
+  mappings = true,
+}
+
 -- treesitter textobjects
 require'nvim-treesitter.configs'.setup {
   textobjects = {

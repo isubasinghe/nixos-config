@@ -166,7 +166,7 @@ local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
 
 
 require('nvim-treesitter.configs').setup {
-	ensure_installed = { "go", "haskell", "cpp", "c", "rust", "javascript", "typescript", "agda", "bash", "bibtex", "capnp", "css", "devicetree", "llvm", "latex", "ledger", "lua", "make", "nix", "proto" }
+	ensure_installed = { "go", "haskell", "rust", "javascript", "typescript", "agda", "bash", "bibtex", "capnp", "css", "devicetree", "llvm", "latex", "ledger", "lua", "make", "nix", "proto" }
 }
 
 local nvim_lsp = require('lspconfig')

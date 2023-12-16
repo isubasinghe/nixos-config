@@ -212,6 +212,7 @@ in
       ps.standard-library
     ]))
     pkgs.nix-index
+    pkgs.protoc-gen-go
   ];
 
   # Enable home-manager and git

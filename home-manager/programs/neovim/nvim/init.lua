@@ -22,6 +22,7 @@ vim.opt.softtabstop=2
 vim.opt.background='dark'
 vim.opt.mouse = 'a'
 vim.opt.completeopt='menuone,noselect'
+vim.opt.syntax='on'
 
 require("lazy").setup({
   { 'rose-pine/neovim', name='rose-pine' },

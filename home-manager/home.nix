@@ -131,7 +131,6 @@ in
     pkgs.du-dust
     pkgs.tealdeer
     pkgs.delta
-    pkgs.exa
     pkgs.duf
     pkgs.fd
     pkgs.ripgrep
@@ -140,7 +139,6 @@ in
     pkgs.mcfly
     pkgs.bottom
     pkgs.zoxide
-    pkgs.exa
     pkgs.hexyl
     pkgs.bingrep
     pkgs.htop
@@ -264,5 +262,5 @@ in
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
 }

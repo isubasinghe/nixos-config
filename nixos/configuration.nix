@@ -148,17 +148,6 @@
     socketActivation = true;
   };
 
-  services.hydra = {
-    package = pkgs.hydra_unstable;
-    enable = true;
-    port = 3030;
-    hydraURL = "http://localhost:3030";
-    notificationSender = "hydra@localhost";
-    buildMachinesFiles = [];
-    useSubstitutes = true;
-  };
-
-
   virtualisation.docker = {
     enable = true;
   };
@@ -185,7 +174,7 @@
   ];
 
   fonts.fontconfig.enable = true; 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["JetBrainsMono"]; })
   ];
 
@@ -223,5 +212,5 @@
     127.0.0.1 azurite
   '';
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }

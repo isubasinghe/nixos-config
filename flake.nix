@@ -92,7 +92,7 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             # > Our main home-manager configuration file <
-            stylix.homeManagerModules.stylix ./home-manager/home.nix
+            ./home-manager/home.nix
           ];
         };
       };

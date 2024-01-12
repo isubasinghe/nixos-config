@@ -23,6 +23,8 @@ vim.opt.background='dark'
 vim.opt.mouse = 'a'
 vim.opt.completeopt='menuone,noselect'
 vim.opt.syntax='on'
+vim.wo.number = true
+vim.wo.relativenumber = true
 
 require("lazy").setup({
   { 'rose-pine/neovim', name='rose-pine' },

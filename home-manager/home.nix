@@ -212,6 +212,7 @@ in
     ]))
     pkgs.nix-index
     pkgs.protoc-gen-go
+    pkgs.leetcode-cli
   ];
 
   # Enable home-manager and git

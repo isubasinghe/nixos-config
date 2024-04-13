@@ -213,6 +213,10 @@ in
     pkgs.nix-index
     pkgs.protoc-gen-go
     pkgs.leetcode-cli
+    (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+    pkgs.jdk11
+    pkgs.poetry
+    pkgs.godot_4
   ];
 
   # Enable home-manager and git

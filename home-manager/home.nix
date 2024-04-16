@@ -109,9 +109,9 @@ in
       ]))
     pkgs.gnumake
     pkgs.ormolu
-    pkgs.yarn
-    # (pkgs.yarn.override {nodejs = pkgs.nodejs-19_x;})
-    pkgs.nodejs
+    # pkgs.yarn
+    (pkgs.yarn.override {nodejs = pkgs.nodejs_21;})
+    pkgs.nodejs_21
     pkgs.lsof
     pkgs.vscode
     pkgs.gopls

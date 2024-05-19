@@ -136,6 +136,10 @@
     };
   };
 
+  services.twingate = {
+    enable = true;
+  };
+
   services.dbus.enable = true;
 
   sound.enable = true; 

@@ -8,8 +8,8 @@ let
     src = pkgs.fetchFromGitHub {
         owner = "Z3Prover";
         repo = pname;
-        rev = "z3-4.12.2";
-        sha256 = "sha256-DTgpKEG/LtCGZDnicYvbxG//JMLv25VHn/NaF307JYA=";
+        rev = "z3-4.12.5";
+        sha256 = "sha256-Qj9w5s02OSMQ2qA7HG7xNqQGaUacA1d4zbOHynq5k+A=";
     };
   });
 in
@@ -214,9 +214,15 @@ in
     pkgs.protoc-gen-go
     pkgs.leetcode-cli
     (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
-    pkgs.jdk11
+    pkgs.jdk17
     pkgs.poetry
     pkgs.godot_4
+    pkgs.remmina
+    pkgs.sbt
+    pkgs.freecad
+    pkgs.boogie
+    pkgs.nmap
+    pkgs.libreoffice-qt
   ];
 
   # Enable home-manager and git

@@ -223,6 +223,7 @@ in
     pkgs.boogie
     pkgs.nmap
     pkgs.libreoffice-qt
+    pkgs.caprice
   ];
 
   # Enable home-manager and git

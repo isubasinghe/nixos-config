@@ -224,6 +224,7 @@ in
     pkgs.nmap
     pkgs.libreoffice-qt
     pkgs.imhex
+    pkgs.distrobox
   ];
 
   # Enable home-manager and git

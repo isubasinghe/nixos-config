@@ -223,6 +223,7 @@ in
     pkgs.boogie
     pkgs.nmap
     pkgs.libreoffice-qt
+    pkgs.imhex
   ];
 
   # Enable home-manager and git

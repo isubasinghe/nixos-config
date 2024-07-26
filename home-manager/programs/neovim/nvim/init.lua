@@ -281,7 +281,7 @@ cmp.setup({
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-local servers = {'ocamllsp', 'ccls', 'tsserver', 'pyright', 'texlab', 'gopls', 'terraformls', 'zls', 'verible'}
+local servers = {'ocamllsp', 'tsserver', 'pyright', 'texlab', 'gopls', 'terraformls', 'zls', 'verible', 'nixd'}
 
 for _,lsp in ipairs(servers) do 
   nvim_lsp[lsp].setup {

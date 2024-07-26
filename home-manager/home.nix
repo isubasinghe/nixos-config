@@ -76,7 +76,6 @@ in
     pkgs.reptyr
     pkgs.age
     pkgs.pass
-    pkgs.matterhorn
     pkgs.infra
     pkgs.croc
     pkgs.tig
@@ -110,8 +109,8 @@ in
     pkgs.gnumake
     pkgs.ormolu
     # pkgs.yarn
-    (pkgs.yarn.override {nodejs = pkgs.nodejs_21;})
-    pkgs.nodejs_21
+    pkgs.yarn
+    pkgs.nodejs
     pkgs.lsof
     pkgs.vscode
     pkgs.gopls
@@ -149,7 +148,6 @@ in
     pkgs.kubespy
     pkgs.gitui
     pkgs.deluge
-    pkgs.helix
     pkgs.valgrind
     pkgs.elan
     pkgs.spotify
@@ -170,21 +168,15 @@ in
     pkgs.xsel
     pkgs.feh
     pkgs.ffmpeg
-    pkgs.nil
+    pkgs.nixd
     pkgs.zettlr
     pkgs.zathura
     pkgs.pkg-config
     pkgs.openssl
     pkgs.racket
     pkgs.xclip
-    pkgs.franz
-    pkgs.jami
-    pkgs.riff
-    pkgs.nixopsUnstable
     pkgs.ipe
-    pkgs.joshuto
     pkgs.screen 
-    pkgs.minicom
     (pkgs.python311.withPackages (p: with p; [
       jsonpatch
       requests
@@ -201,7 +193,6 @@ in
     ]))
     pkgs.obs-studio
     pkgs.scc
-    pkgs.lynx
     pkgs.tlaplusToolbox
     pkgs.unzip
     z3-4-12-2
@@ -215,16 +206,21 @@ in
     pkgs.leetcode-cli
     (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
     pkgs.jdk17
+    pkgs.maven
     pkgs.poetry
     pkgs.godot_4
-    pkgs.remmina
     pkgs.sbt
-    pkgs.freecad
     pkgs.boogie
     pkgs.nmap
     pkgs.libreoffice-qt
     pkgs.imhex
     pkgs.distrobox
+    pkgs.java-language-server
+    pkgs.tor
+    pkgs.tor-browser
+    pkgs.jetbrains.rust-rover
+    pkgs.virtualbox
+    pkgs.jetbrains.idea-community
   ];
 
   # Enable home-manager and git

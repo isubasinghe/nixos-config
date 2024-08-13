@@ -136,9 +136,9 @@
     };
   };
 
-  services.twingate = {
-    enable = true;
-  };
+  # services.twingate = {
+  #   enable = true;
+  # };
 
   services.dbus.enable = true;
 
@@ -184,10 +184,10 @@
 
   programs.dconf.enable = true;
 
-  services.tftpd = { 
-    enable = true;
-    path = "/srv/tftp";
-  };
+  # services.tftpd = { 
+  #   enable = true;
+  #   path = "/srv/tftp";
+  # };
 
   services.fail2ban = {
     enable = false;
@@ -196,6 +196,7 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 ];
+    allowedUDPPorts = [ 53 ];
   };
 
   hardware.bluetooth.enable = true; 
@@ -203,11 +204,11 @@
   services.blueman.enable = true; 
   security.polkit.enable = true;
 
-  services.jellyfin = {
-    enable = true; 
-    openFirewall = true;
-    user = "jellyfin";
-  };
+  # services.jellyfin = {
+  #   enable = true; 
+  #   openFirewall = true;
+  #   user = "jellyfin";
+  # };
   networking.extraHosts = ''
     127.0.0.1 dex
     127.0.0.1 minio

@@ -80,13 +80,19 @@
       # Available through 'home-manager --flake .#your-username@your-hostname'
       homeConfigurations = {
         # FIXME replace with your username@hostname
-        "isithas@nixos" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            ./home-manager/home.nix
-          ];
-        };
+        "isithas@nixos" = 
+        let 
+          system = "x86_64-linux";
+          pkgs = import nixpkgs { inherit system; };
+          unstable = import nixpkgs-unstable { inherit system; };
+        in
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            extraSpecialArgs = { inherit inputs outputs unstable; };
+            modules = [
+              ./home-manager/home.nix
+            ];
+          };
         "isithas@vb-100" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };

@@ -1,6 +1,6 @@
-{pkgs, config,...}:
+{pkgs, unstable, config,...}:
 {
-  home.packages = [pkgs.neovim];
+  home.packages = [unstable.neovim];
   home.file."${config.xdg.configHome}/nvim" = {
     source = ./nvim;
     recursive = true;

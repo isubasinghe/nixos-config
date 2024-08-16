@@ -221,6 +221,7 @@ in
     pkgs.jetbrains.rust-rover
     pkgs.virtualbox
     pkgs.jetbrains.idea-community
+    pkgs.tree-sitter
   ];
 
   # Enable home-manager and git
@@ -272,5 +273,5 @@ in
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
 }

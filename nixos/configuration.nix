@@ -125,7 +125,7 @@
     LC_TELEPHONE = "en_AU.UTF-8";
     LC_TIME = "en_AU.UTF-8";
   };
-
+  
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -185,31 +185,12 @@
 
   programs.dconf.enable = true;
 
-  # services.tftpd = { 
-  #   enable = true;
-  #   path = "/srv/tftp";
-  # };
-
-  services.fail2ban = {
-    enable = false;
-  };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 ];
-    allowedUDPPorts = [ 53 ];
-  };
 
   hardware.bluetooth.enable = true; 
   hardware.cpu.amd.updateMicrocode = true;
   services.blueman.enable = true; 
   security.polkit.enable = true;
 
-  # services.jellyfin = {
-  #   enable = true; 
-  #   openFirewall = true;
-  #   user = "jellyfin";
-  # };
   networking.extraHosts = ''
     127.0.0.1 dex
     127.0.0.1 minio

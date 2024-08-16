@@ -1,7 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, outputs, lib, config, pkgs, ... }: 
+{ inputs, outputs, lib, config, pkgs, unstable, ... }: 
 let
   z3-4-12-2 = pkgs.z3.overrideAttrs(old: rec {
     pname = "z3";
@@ -78,16 +78,12 @@ in
     pkgs.pass
     pkgs.infra
     pkgs.croc
-    pkgs.tig
     pkgs.nix-output-monitor
-    pkgs.verifast
-    pkgs.whatsapp-for-linux
     pkgs.zotero
     pkgs.kdash
     pkgs.verible
     pkgs.verilator
     pkgs.cachix
-    pkgs.httpie 
     pkgs.jq 
     pkgs.kubectl
     pkgs.protobuf
@@ -135,7 +131,7 @@ in
     pkgs.fd
     pkgs.ripgrep
     pkgs.silver-searcher
-    pkgs.fzf
+    unstable.fzf
     pkgs.mcfly
     pkgs.bottom
     pkgs.zoxide
@@ -169,13 +165,11 @@ in
     pkgs.feh
     pkgs.ffmpeg
     pkgs.nixd
-    pkgs.zettlr
     pkgs.zathura
     pkgs.pkg-config
     pkgs.openssl
     pkgs.racket
     pkgs.xclip
-    pkgs.ipe
     pkgs.screen 
     (pkgs.python311.withPackages (p: with p; [
       jsonpatch
@@ -216,12 +210,11 @@ in
     pkgs.imhex
     pkgs.distrobox
     pkgs.java-language-server
-    pkgs.tor
-    pkgs.tor-browser
     pkgs.jetbrains.rust-rover
     pkgs.virtualbox
     pkgs.jetbrains.idea-community
     pkgs.tree-sitter
+    pkgs.dig
   ];
 
   # Enable home-manager and git

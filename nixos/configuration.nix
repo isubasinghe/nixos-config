@@ -69,6 +69,7 @@
       trusted-users = [
         "isithas"
       ];
+      stalled-download-timeout = 50000;
     };
   };
 

@@ -72,7 +72,7 @@ in
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
-    pkgs.gnome.cheese
+    pkgs.cheese
     pkgs.reptyr
     pkgs.age
     pkgs.pass
@@ -112,7 +112,7 @@ in
     pkgs.gopls
     pkgs.ccls
     (pkgs.nodePackages.typescript-language-server)
-    (pkgs.nodePackages.pyright)
+    pkgs.pyright
     pkgs.gofumpt
     pkgs.delve
     pkgs.gdlv
@@ -152,7 +152,7 @@ in
     pkgs.libnotify
     pkgs.multilockscreen
     pkgs.ouch
-    pkgs.gnome.nautilus
+    pkgs.nautilus
     pkgs.paprefs
     pkgs.pavucontrol
     pkgs.pasystray
@@ -204,7 +204,7 @@ in
     pkgs.poetry
     pkgs.godot_4
     pkgs.sbt
-    pkgs.boogie
+    # pkgs.boogie
     pkgs.nmap
     pkgs.libreoffice-qt
     pkgs.imhex

@@ -88,10 +88,13 @@
     "x86_64-windows"
   ];
 
-
+  
   hardware = {
     pulseaudio.enable = false; 
-    opengl.enable = true;
+    graphics.enable = true;
+    nvidia = {
+      open = true;
+    };
   };
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
@@ -143,7 +146,7 @@
 
   services.dbus.enable = true;
 
-  sound.enable = true; 
+  # sound.enable = true; 
   security.rtkit.enable = true;
 
   services.pipewire = {

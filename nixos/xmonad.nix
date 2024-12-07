@@ -7,25 +7,28 @@
       enable = true;
       packages = [pkgs.dconf];
     };
+
+    libinput = {
+      enable = true; 
+      touchpad.disableWhileTyping = true;
+    };
+
+    displayManager.defaultSession = "none+xmonad";
+
     xserver = {
       enable = true; 
-
-      libinput = {
-        enable = true; 
-        touchpad.disableWhileTyping = true;
+      xkb = {
+        variant = "";
+        options = "caps:ctrl_modifier";
+        layout = "au";
       };
-
-      layout = "au";
-      xkbVariant = "";
       videoDrivers = ["nvidia"];
-      displayManager.defaultSession = "none+xmonad";
 
       windowManager.xmonad = {
         enable = true;
         enableContribAndExtras = true;
       };
 
-      xkbOptions = "caps:ctrl_modifier";
     };
   };
 

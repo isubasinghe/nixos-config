@@ -72,6 +72,7 @@ in
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = [
+    pkgs.kitty
     pkgs.cheese
     pkgs.reptyr
     pkgs.age
@@ -184,6 +185,7 @@ in
       pytest
       pydantic
       pytest-cov
+      uv
     ]))
     pkgs.obs-studio
     pkgs.scc

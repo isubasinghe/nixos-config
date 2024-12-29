@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, unstable, ... }:
 
 let
   inherit (config) colorscheme;
@@ -50,6 +50,7 @@ in
           TERM = 'wezterm',
         },
         default_prog = { "zsh" },
+        front_end = "WebGpu",
       }
     '';
   };

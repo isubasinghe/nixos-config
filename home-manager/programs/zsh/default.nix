@@ -8,7 +8,6 @@
         "git"
         "sudo"
         "cp"
-        "fd"
         "fzf"
         "gh"
         "node"

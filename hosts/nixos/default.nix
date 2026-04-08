@@ -27,8 +27,12 @@
     cpu.amd.updateMicrocode = true;
   };
 
+  users.users.isithas.initialPassword = "correcthorsebatterystaple";
+
   services.blueman.enable = true;
   security.polkit.enable = true;
+
+  services.pipewire.socketActivation = true;
 
   services.openssh.settings.PasswordAuthentication = false;
 

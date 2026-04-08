@@ -15,9 +15,13 @@
 
   i18n.defaultLocale = "en_GB.UTF-8";
 
+  sound.enable = true;
+
   services.printing.enable = true;
 
   services.pipewire.alsa.support32Bit = true;
+
+  users.users.isithas.description = "Isitha Subasinghe";
 
   services.openssh.settings.PasswordAuthentication = true;
 

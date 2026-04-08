@@ -22,7 +22,7 @@
         options = "caps:ctrl_modifier";
         layout = "au";
       };
-      videoDrivers = ["nvidia"];
+      videoDrivers = ["modesetting"];
 
       windowManager.xmonad = {
         enable = true;

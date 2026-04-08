@@ -48,8 +48,6 @@
     texlab
     java-language-server
     nixd
-    gcc
-    cmake
     pkg-config
     openssl
     protobuf

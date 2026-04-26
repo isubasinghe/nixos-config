@@ -33,6 +33,12 @@
             ./hosts/vb-100
           ];
         };
+        iso = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./hosts/iso.nix
+          ];
+        };
       };
 
       homeConfigurations = {

@@ -68,6 +68,19 @@
               ./home-manager/home.nix
             ];
           };
+        "isubasinghe@pop-os" =
+          let
+            system = "x86_64-linux";
+            pkgs = import nixpkgs { inherit system; };
+            unstable = import nixpkgs-unstable { inherit system; };
+          in
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            extraSpecialArgs = { inherit inputs outputs unstable; };
+            modules = [
+              ./home-manager/home-pop-os.nix
+            ];
+          };
       };
     };
 }

@@ -1,0 +1,47 @@
+# ─── Theme ────────────────────────────────────────────────────────────────
+theme = Adventure Time
+
+# ─── Font ─────────────────────────────────────────────────────────────────
+font-family = FiraCode Nerd Font
+font-size = 13
+# Slightly tighter line spacing reads better in Neovim
+adjust-cell-height = -5%
+# Ligatures are on by default; disable them in the cursor cell so editing
+# operators like >>= and <$> isn't visually confusing
+font-feature = -calt
+
+# ─── Window ───────────────────────────────────────────────────────────────
+# Breathing room around the text
+window-padding-x = 12
+window-padding-y = 10
+window-padding-balance = true
+# Subtle transparency — bump to 1.0 if you want it opaque
+background-opacity = 0.95
+# Hide the GTK titlebar for a cleaner look (Super+drag still moves the window)
+window-decoration = false
+window-theme = dark
+
+# ─── Cursor ───────────────────────────────────────────────────────────────
+cursor-style = bar
+cursor-style-blink = true
+shell-integration-features = cursor,sudo,title
+
+# ─── Scrollback & mouse ───────────────────────────────────────────────────
+scrollback-limit = 100000
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+click-repeat-interval = 300
+
+# ─── Bell ─────────────────────────────────────────────────────────────────
+# Disable system + audio bell; keep visual cues (attention, title, border)
+bell-features = no-system,no-audio,attention,title,no-border
+
+# ─── Shell ────────────────────────────────────────────────────────────────
+# Uncomment if you haven't run `chsh -s /usr/bin/zsh` yet
+# command = /usr/bin/zsh --login
+
+# ─── Keybindings (ported from wezterm) ────────────────────────────────────
+keybind = ctrl+shift+v=paste_from_selection
+# Window state — borderless means no titlebar buttons, so bind these instead
+keybind = ctrl+shift+m=toggle_maximize
+keybind = ctrl+shift+enter=toggle_fullscreen

@@ -11,9 +11,11 @@
     nix-colors.url = "github:misterio77/nix-colors";
 
     attic.url = "github:zhaofengli/attic";
+
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, llm-agents, ... }@inputs:
     let
       inherit (self) outputs;
     in

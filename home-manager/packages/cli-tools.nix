@@ -1,8 +1,9 @@
 # CLI tools: terminal utilities, shell enhancements, file tools
-{ pkgs, unstable, ... }:
+{ pkgs, unstable, inputs, ... }:
 
 {
   home.packages = with pkgs; [
+    inputs.llm-agents.packages.${pkgs.system}.codex
     bat
     procs
     du-dust

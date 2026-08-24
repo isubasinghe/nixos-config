@@ -4,6 +4,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-system-manager.url = "github:nixos/nixpkgs/nixos-26.05";
+
+    system-manager = {
+      url = "github:numtide/system-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-system-manager";
+    };
 
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -15,7 +21,7 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, llm-agents, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, llm-agents, system-manager, ... }@inputs:
     let
       inherit (self) outputs;
     in
@@ -41,6 +47,13 @@
             ./hosts/iso.nix
           ];
         };
+      };
+
+      systemConfigs.precision-3591 = system-manager.lib.makeSystemConfig {
+        specialArgs = { inherit inputs outputs; };
+        modules = [
+          ./hosts/precision-3591
+        ];
       };
 
       homeConfigurations = {
@@ -81,6 +94,19 @@
             extraSpecialArgs = { inherit inputs outputs unstable; };
             modules = [
               ./home-manager/home-pop-os.nix
+            ];
+          };
+        "isubasinghe@precision-3591" =
+          let
+            system = "x86_64-linux";
+            pkgs = import nixpkgs { inherit system; };
+            unstable = import nixpkgs-unstable { inherit system; };
+          in
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            extraSpecialArgs = { inherit inputs outputs unstable; };
+            modules = [
+              ./home-manager/home-precision-3591.nix
             ];
           };
       };

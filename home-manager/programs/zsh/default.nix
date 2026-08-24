@@ -14,7 +14,7 @@
         "rust"
       ];
     };
-    initExtra = ''
+    initContent = ''
       eval $(${pkgs.mcfly}/bin/mcfly init zsh)
       eval $(${pkgs.zoxide}/bin/zoxide init zsh)
       path+=($HOME/.cargo/bin)

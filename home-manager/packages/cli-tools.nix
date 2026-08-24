@@ -3,10 +3,10 @@
 
 {
   home.packages = with pkgs; [
-    inputs.llm-agents.packages.${pkgs.system}.codex
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
     bat
     procs
-    du-dust
+    dust
     tealdeer
     delta
     duf

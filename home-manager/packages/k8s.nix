@@ -4,7 +4,7 @@
 {
   home.packages = with pkgs; [
     kubectl
-    kube3d
+    k3d
     k9s
     kubespy
     kdash

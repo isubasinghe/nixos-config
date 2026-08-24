@@ -21,7 +21,7 @@
     ormolu
     nodejs
     yarn
-    (python311.withPackages (p: with p; [
+    (python3.withPackages (p: with p; [
       jsonpatch
       requests
       pyyaml
@@ -38,7 +38,7 @@
     ]))
     gopls
     ccls
-    (nodePackages.typescript-language-server)
+    typescript-language-server
     pyright
     gofumpt
     delve
@@ -59,7 +59,7 @@
     tree-sitter
     vscode
     jetbrains.rust-rover
-    jetbrains.idea-community
+    jetbrains.idea
     valgrind
   ];
 }

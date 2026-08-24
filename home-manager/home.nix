@@ -36,21 +36,27 @@
   programs.home-manager.enable = true;
   programs.git = {
     enable = true;
-    userName = "isubasinghe";
-    userEmail = "i.subasinghe@unsw.edu.au";
-    difftastic.enable = true;
-    aliases = {
-      co = "checkout";
-      cob = "checkout -b";
-      c = "commit --signoff -m";
-      bv = "branch -v";
-      rv = "remote -v";
+    settings = {
+      user.name = "isubasinghe";
+      user.email = "i.subasinghe@unsw.edu.au";
+      alias = {
+        co = "checkout";
+        cob = "checkout -b";
+        c = "commit --signoff -m";
+        bv = "branch -v";
+        rv = "remote -v";
+      };
     };
+  };
+
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
   };
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs29-nox;
+    package = pkgs.emacs30-nox;
     extraPackages = es: [
       es.lsp-mode
       es.evil

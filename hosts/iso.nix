@@ -35,7 +35,10 @@
     }
   ];
 
-  isoImage.isoBaseName = "nixos-isubasinghe";
+  image.baseName = "nixos-isubasinghe";
+
+  # Avoid importing a foreign ZFS root pool automatically from the live ISO.
+  boot.zfs.forceImportRoot = false;
 
   # Install script available on the live system
   environment.etc."install.sh" = {

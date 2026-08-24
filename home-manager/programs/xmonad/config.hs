@@ -69,7 +69,7 @@ import           XMonad.Prompt                         ( XPConfig(..)
                                                        , XPPosition(CenteredAt)
                                                        )
 import           XMonad.Util.EZConfig                  ( mkNamedKeymap )
-import XMonad.Util.Ungrab (unGrab)
+import XMonad.Operations (unGrab)
 import           XMonad.Util.NamedActions              ( (^++^)
                                                        , NamedAction (..)
                                                        , addDescrKeys'

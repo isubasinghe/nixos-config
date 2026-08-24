@@ -24,7 +24,7 @@
   services.openssh.settings.PasswordAuthentication = true;
 
   services.hydra = {
-    package = pkgs.hydra_unstable;
+    package = pkgs.hydra;
     enable = true;
     port = 3030;
     hydraURL = "http://localhost:3030";

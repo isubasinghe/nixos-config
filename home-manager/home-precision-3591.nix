@@ -48,17 +48,16 @@
 
   programs.git = {
     enable = true;
-    userName = "isubasinghe";
-    userEmail = "isitha@pipekit.io";
-    difftastic.enable = true;
-    aliases = {
-      co = "checkout";
-      cob = "checkout -b";
-      c = "commit --signoff -m";
-      bv = "branch -v";
-      rv = "remote -v";
-    };
-    extraConfig = {
+    settings = {
+      user.name = "isubasinghe";
+      user.email = "isitha@pipekit.io";
+      alias = {
+        co = "checkout";
+        cob = "checkout -b";
+        c = "commit --signoff -m";
+        bv = "branch -v";
+        rv = "remote -v";
+      };
       color.ui = "auto";
       pack.threads = 6;
       merge.conflictStyle = "diff3";
@@ -66,9 +65,14 @@
     };
   };
 
+  programs.difftastic = {
+    enable = true;
+    git.enable = true;
+  };
+
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs29-nox;
+    package = pkgs.emacs30-nox;
     extraPackages = es: [
       es.lsp-mode
       es.evil

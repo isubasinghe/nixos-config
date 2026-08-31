@@ -18,7 +18,10 @@ let
 
   hyprlandLauncher = pkgs.writeShellScript "start-hyprland-nix" ''
     mkdir -p /home/isubasinghe/.local/state
-    export AQ_DRM_DEVICES=/dev/dri/by-path/pci-0000:00:02.0-card
+    if [ -f /home/isubasinghe/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+      . /home/isubasinghe/.nix-profile/etc/profile.d/hm-session-vars.sh
+    fi
+    export PATH="/run/system-manager/sw/bin:$PATH"
     exec /home/isubasinghe/.nix-profile/bin/Hyprland \
       >>/home/isubasinghe/.local/state/hyprland-session.log 2>&1
   '';
@@ -47,10 +50,24 @@ in
     "/usr/share/wayland-sessions/hyprland-nix.desktop"."L+".argument = "${hyprlandSession}";
   };
 
+  security.wrappers.unix_chkpwd = {
+    source = "${pkgs.linux-pam}/bin/unix_chkpwd";
+    owner = "root";
+    group = "root";
+    setuid = true;
+    permissions = "u+rx,g+x,o+x";
+  };
+
+  environment.systemPackages = [
+    pkgs.firefox
+  ];
+
   environment.etc."pam.d/hyprlock".text = ''
-    @include common-auth
-    @include common-account
-    @include common-password
-    @include common-session
+    #%PAM-1.0
+
+    auth       required   pam_unix.so
+    account    required   pam_unix.so
+    password   required   pam_unix.so
+    session    required   pam_unix.so
   '';
 }

@@ -115,6 +115,7 @@ in
         misc = {
           disable_hyprland_logo = true,
           disable_splash_rendering = true,
+          disable_watchdog_warning = true,
           force_default_wallpaper = 0,
           animate_manual_resizes = true,
           focus_on_activate = true,
@@ -258,6 +259,7 @@ in
       general = {
         hide_cursor = true;
         grace = 2;
+        ignore_empty_input = true;
       };
       background = [
         {
@@ -284,6 +286,7 @@ in
           fail_color = "rgb(${palette.base08})";
           rounding = 14;
           shadow_passes = 2;
+          ignore_empty_input = true;
         }
       ];
       label = [

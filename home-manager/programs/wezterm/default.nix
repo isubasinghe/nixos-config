@@ -7,6 +7,7 @@ in
 {
   programs.wezterm = {
     enable = true;
+    package = config.lib.nixGL.wrap pkgs.wezterm;
     colorSchemes = {
       "${colorscheme.slug}" = {
         foreground = "#${palette.base04}";
@@ -49,7 +50,7 @@ in
         set_environment_variables = {
           TERM = 'wezterm',
         },
-        default_prog = { "zsh" },
+        default_prog = { "${pkgs.zsh}/bin/zsh" },
         front_end = "WebGpu",
       }
     '';

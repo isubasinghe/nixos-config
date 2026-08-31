@@ -108,7 +108,7 @@ import XMonad.Hooks.StatusBar.PP
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "wezterm"
+myTerminal      = "xterm -e zsh"
 appLauncher  = "rofi -modi drun,ssh,window -show drun -show-icons"
 
 -- Whether focus follows the mouse pointer.
@@ -172,6 +172,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    , ((mod4Mask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch rofi
     , ((modm,               xK_p     ), spawn appLauncher)
@@ -400,13 +401,13 @@ myLogHook = return ()
 -- It will add initialization of EWMH support to your custom startup
 -- hook by combining it with ewmhDesktopsStartup.
 --
-myStartupHook = return ()
+myStartupHook = spawnOnce "xsetroot -cursor_name left_ptr"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
-main = xmonad . ewmhFullscreen . ewmh . xmobarProp $ defaults
+main = xmonad . xmobarProp $ defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

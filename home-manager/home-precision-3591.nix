@@ -1,5 +1,15 @@
-{ inputs, outputs, lib, pkgs, ... }:
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
+let
+  flameshotPackage = config.lib.nixGL.wrap pkgs.flameshot;
+in
 {
   imports = [
     ./programs/zsh
@@ -10,10 +20,10 @@
     ./programs/wezterm
     ./programs/ghostty
     ./programs/xmonad
+    ./programs/hyprland
     ./programs/xmobar
     ./packages/cli-tools.nix
     ./packages/dev-tools.nix
-    ./packages/k8s.nix
     ./packages/academic.nix
     inputs.nix-colors.homeManagerModules.default
   ];
@@ -35,6 +45,15 @@
     };
   };
 
+  targets.genericLinux.enable = true;
+  targets.genericLinux.nixGL = {
+    packages = inputs.nixgl.packages;
+    defaultWrapper = "mesa";
+    offloadWrapper = "nvidiaPrime";
+    installScripts = [ "mesa" ];
+    vulkan.enable = true;
+  };
+
   home = {
     username = "isubasinghe";
     homeDirectory = "/home/isubasinghe";
@@ -42,7 +61,24 @@
   };
 
   # This application is intentionally limited to the Dell Home Manager target.
-  home.packages = [ pkgs.slack ];
+  home.packages = [
+    flameshotPackage
+    (config.lib.nixGL.wrap pkgs.slack)
+  ];
+
+  systemd.user.services.flameshot = {
+    Unit = {
+      Description = "Flameshot screenshot tool";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${flameshotPackage}/bin/flameshot";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 
   programs.home-manager.enable = true;
 

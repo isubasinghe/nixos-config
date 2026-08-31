@@ -3,6 +3,8 @@
 
 {
   home.packages = with pkgs; [
+    teams
+    slack
     kitty
     cheese
     spotify

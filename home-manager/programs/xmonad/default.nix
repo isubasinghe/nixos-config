@@ -1,8 +1,15 @@
-{ pkgs, lib, specialArgs, ... }:
+{
+  pkgs,
+  lib,
+  specialArgs,
+  ...
+}:
 
 let
 
   polybarOpts = ''
+    ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
+    ${pkgs.feh}/bin/feh --bg-fill ${../../../imgs/wallpaper.jpeg} &
     ${pkgs.pasystray}/bin/pasystray &
     ${pkgs.blueman}/bin/blueman-applet &
     ${pkgs.networkmanagerapplet}/bin/nm-applet --sm-disable --indicator &
@@ -21,15 +28,17 @@ in
   };
 
   home.packages = with pkgs; [
-    dialog                 # Dialog boxes on the terminal (to show key bindings)
-    networkmanager_dmenu   # networkmanager on dmenu
-    networkmanagerapplet   # networkmanager applet
-    nitrogen               # wallpaper manager
-    xcape                  # keymaps modifier
-    xkbcomp                # keymaps modifier
-    xmodmap                # keymaps modifier
-    xrandr                 # display manager (X Resize and Rotate protocol)
+    dialog # Dialog boxes on the terminal (to show key bindings)
+    networkmanager_dmenu # networkmanager on dmenu
+    networkmanagerapplet # networkmanager applet
+    nitrogen # wallpaper manager
+    xcape # keymaps modifier
+    xkbcomp # keymaps modifier
+    xmodmap # keymaps modifier
+    xrandr # display manager (X Resize and Rotate protocol)
     scrot
+    feh
+    xterm
   ];
 
   xsession = {

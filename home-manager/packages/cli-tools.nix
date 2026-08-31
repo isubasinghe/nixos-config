@@ -4,6 +4,7 @@
 {
   home.packages = with pkgs; [
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    opencode
     bat
     procs
     dust
@@ -22,6 +23,7 @@
     htop
     gh
     gitui
+    docker-client
     jq
     lsof
     ouch

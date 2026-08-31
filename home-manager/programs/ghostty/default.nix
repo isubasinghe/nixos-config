@@ -1,6 +1,6 @@
 { pkgs, unstable, config, ... }:
 {
-  home.packages = [ unstable.ghostty ];
+  home.packages = [ (config.lib.nixGL.wrap unstable.ghostty) ];
 
   xdg.configFile."ghostty/config".source = ./config;
 }

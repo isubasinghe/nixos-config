@@ -18,7 +18,7 @@ in
     tikzit
     racket
     elan
-    z3-4-12-5
+    z3
     isabelle
     tlaplusToolbox
     (agda.withPackages (ps: [ ps.standard-library ]))

@@ -187,7 +187,7 @@ in
       hl.bind("SHIFT + Print", hl.dsp.exec_cmd([[
         ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.wl-clipboard}/bin/wl-copy
       ]]))
-      hl.bind("SHIFT + S", hl.dsp.exec_cmd("${flameshotPackage}/bin/flameshot gui"))
+      hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("${flameshotPackage}/bin/flameshot gui"))
 
       hl.bind(mod .. " + left", hl.dsp.focus({ direction = "left" }))
       hl.bind(mod .. " + right", hl.dsp.focus({ direction = "right" }))

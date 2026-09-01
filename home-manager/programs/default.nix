@@ -10,4 +10,5 @@
   ./tmux
   ./zoxide
   ./neovim
+  ./remind
 ]

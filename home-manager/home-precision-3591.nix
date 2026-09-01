@@ -31,6 +31,8 @@ in
 
   custom.remind.workReminders = true;
 
+  programs.git.settings.user.email = "isitha.subasinghe@sqc.com";
+
   targets.genericLinux.enable = true;
   targets.genericLinux.nixGL = {
     packages = inputs.nixgl.packages;

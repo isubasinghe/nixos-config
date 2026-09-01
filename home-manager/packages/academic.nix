@@ -15,6 +15,9 @@ in
 {
   home.packages = with pkgs; [
     texlive.combined.scheme-full
+    typst
+    pandoc
+    zathura
     tikzit
     racket
     elan

@@ -10,7 +10,6 @@
     vlc
     obs-studio
     libreoffice-qt
-    zathura
     feh
     nautilus
     deluge

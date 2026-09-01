@@ -19,6 +19,7 @@
       eval $(${pkgs.zoxide}/bin/zoxide init zsh)
       path+=($HOME/.cargo/bin)
       alias v="nvim"
+      alias cat="bat"
       alias pf="fzf --preview='bat --style numbers,changes --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down"
       pfzf() {
         local result=$(fzf --preview='bat --style numbers,changes --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down)

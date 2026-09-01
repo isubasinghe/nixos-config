@@ -4,6 +4,8 @@ let
   inherit (config.colorscheme) palette;
 
   wallpaper = ../../../imgs/wallpaper.jpeg;
+  bluemanPackage = config.lib.nixGL.wrap pkgs.blueman;
+  flameshotPackage = config.lib.nixGL.wrap pkgs.flameshot;
   hyprlandPackage = config.lib.nixGL.wrap pkgs.hyprland;
   hypridlePackage = pkgs.hypridle;
   hyprlockPackage = config.lib.nixGL.wrap pkgs.hyprlock;
@@ -26,6 +28,7 @@ in
     swaybg
     wl-clipboard
     rofiPackage
+    bluemanPackage
   ];
 
   wayland.systemd.target = "hyprland-session.target";
@@ -156,6 +159,7 @@ in
 
       hl.on("hyprland.start", function()
         hl.exec_cmd("${pkgs.networkmanagerapplet}/bin/nm-applet --indicator")
+        hl.exec_cmd("${bluemanPackage}/bin/blueman-applet")
         hl.exec_cmd("${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1")
         hl.exec_cmd("${pkgs.swaybg}/bin/swaybg -i ${wallpaper} -m fill")
         hl.exec_cmd("${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${pkgs.cliphist}/bin/cliphist store")
@@ -183,6 +187,7 @@ in
       hl.bind("SHIFT + Print", hl.dsp.exec_cmd([[
         ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.wl-clipboard}/bin/wl-copy
       ]]))
+      hl.bind("SHIFT + S", hl.dsp.exec_cmd("${flameshotPackage}/bin/flameshot gui"))
 
       hl.bind(mod .. " + left", hl.dsp.focus({ direction = "left" }))
       hl.bind(mod .. " + right", hl.dsp.focus({ direction = "right" }))

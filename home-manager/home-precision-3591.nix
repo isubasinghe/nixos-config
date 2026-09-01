@@ -17,6 +17,7 @@ in
     ./programs/tmux
     ./programs/zoxide
     ./programs/neovim
+    ./programs/remind
     ./programs/wezterm
     ./programs/ghostty
     ./programs/xmonad

@@ -55,6 +55,10 @@
     jdk17
     maven
     sbt
+    metals
+    scalafmt
+    coursier
+    scala-cli
     poetry
     tree-sitter
     vscode

@@ -52,6 +52,8 @@ in
   home.packages = [
     flameshotPackage
     (config.lib.nixGL.wrap pkgs.slack)
+    pkgs.openvpn
+    pkgs.networkmanager-openvpn
   ];
 
   systemd.user.services.flameshot = {

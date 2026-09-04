@@ -1,6 +1,29 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
+  globalprotect-unwrapped = inputs.globalprotect-openconnect.packages.x86_64-linux.prebuilt;
+
+  # WebKitGTK cannot create an EGL display on this machine's NVIDIA GPU
+  # inside the FHS sandbox ("Could not create default EGL display:
+  # EGL_BAD_PARAMETER"), leaving the gpgui window blank and aborting the
+  # embedded SSO webview. Disabling accelerated compositing makes WebKit
+  # render in software instead. nixGL does not apply here because the
+  # prebuilt binaries run in their own bubblewrap sandbox.
+  globalprotect = pkgs.runCommand "globalprotect-openconnect-wrapped"
+    { nativeBuildInputs = [ pkgs.makeWrapper ]; }
+    ''
+      mkdir -p $out/bin
+      for cmd in ${globalprotect-unwrapped}/bin/*; do
+        makeWrapper "$cmd" "$out/bin/$(basename "$cmd")" \
+          --set WEBKIT_DISABLE_COMPOSITING_MODE 1
+      done
+      for d in lib libexec share; do
+        if [ -e "${globalprotect-unwrapped}/$d" ]; then
+          ln -s "${globalprotect-unwrapped}/$d" "$out/$d"
+        fi
+      done
+    '';
+
   xmonadLauncher = pkgs.writeShellScript "start-xmonad-nix" ''
     exec /etc/X11/Xsession /home/isubasinghe/.xsession
   '';
@@ -60,7 +83,62 @@ in
 
   environment.systemPackages = [
     pkgs.firefox
+
+    # GlobalProtect VPN client (CLI + GUI). The prebuilt package includes the
+    # proprietary gpgui binary and expects /run/current-system/sw/bin, which
+    # system-manager provides via its linkCurrentSystem symlink.
+    globalprotect
+
+    # The GlobalProtect FHS sandbox replaces /usr, hiding Ubuntu's fonts, so
+    # provide fonts the sandbox can see via /run/system-manager/sw/share/fonts.
+    pkgs.dejavu_fonts
+
+    # The vpnc-script looks up `ip` via PATH, but the FHS sandbox hides the
+    # host's /usr/sbin. /run is bound into the sandbox, so an iproute2
+    # installed in the system-manager profile is found and routes/DNS get
+    # configured on the host.
+    pkgs.iproute2
   ];
+
+  # Ubuntu 24.04+ blocks unprivileged user namespaces via AppArmor, which
+  # breaks the Nix-built bubblewrap used by the GlobalProtect FHS wrappers
+  # ("bwrap: setting up uid map: Permission denied"). This profile allows
+  # bubblewrap from the Nix store to create user namespaces.
+  environment.etc."apparmor.d/nix-bwrap".text = ''
+    abi <abi/4.0>,
+    include <tunables/global>
+
+    profile nix-bwrap /nix/store/*-bubblewrap-*/bin/bwrap flags=(unconfined) {
+      userns,
+
+      # Site-specific additions and overrides. See local/README for details.
+      include if exists <local/nix-bwrap>
+    }
+  '';
+
+  # Make the fonts installed via system-manager visible to fontconfig, both
+  # on the host and inside the GlobalProtect FHS sandbox.
+  environment.etc."fonts/local.conf".text = ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+    <fontconfig>
+      <dir>/run/system-manager/sw/share/fonts</dir>
+    </fontconfig>
+  '';
+
+  # Allow active sessions to start the GlobalProtect service via pkexec
+  # without a password prompt. Ubuntu's polkit doesn't search
+  # /run/system-manager/sw/share, so link the shipped rule into /etc.
+  environment.etc."polkit-1/rules.d/49-gpgui.rules".source =
+    "${globalprotect}/share/polkit-1/rules.d/49-gpgui.rules";
+
+  # Let `sudo <command>` resolve binaries from the system-manager profile.
+  environment.etc."sudoers.d/90-system-manager-path" = {
+    text = ''
+      Defaults secure_path="/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+    '';
+    mode = "0440";
+  };
 
   environment.etc."pam.d/hyprlock".text = ''
     #%PAM-1.0

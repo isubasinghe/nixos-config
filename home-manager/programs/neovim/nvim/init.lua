@@ -136,6 +136,11 @@ require("lazy").setup({
     end
   },
   {'florentc/vim-tla'},
+  {
+    'scalameta/nvim-metals',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    ft = { 'scala', 'sbt', 'java' },
+  },
   --[[ {
     'cordx56/rustowl',
     version = '*', -- Latest stable version
@@ -315,6 +320,14 @@ for _, lsp in ipairs(servers) do
 end
 
 vim.lsp.enable(servers)
+
+local metals_config = require("metals").bare_config()
+metals_config.capabilities = capabilities
+metals_config.on_attach = other_on_attach
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "scala", "sbt", "java" },
+  callback = function() require("metals").initialize_or_attach(metals_config) end,
+})
 
 
 -- Idris2 

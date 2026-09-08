@@ -54,6 +54,7 @@ in
     (config.lib.nixGL.wrap pkgs.slack)
     pkgs.openvpn
     pkgs.networkmanager-openvpn
+    pkgs.act
   ];
 
   systemd.user.services.flameshot = {

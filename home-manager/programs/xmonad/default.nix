@@ -41,8 +41,12 @@ in
     xterm
   ];
 
-  xsession = {
-    enable = true;
+  # xmonad recompiles itself on X startup into ~/.xmonad/xmonad-x86_64-linux,
+  # replacing home-manager's symlink with a regular file. Force-overwrite it
+  # so `home-manager switch` never fails on checkLinkTargets again.
+  home.file.".xmonad/xmonad-x86_64-linux".force = lib.mkForce true;
+
+  xsession = {    enable = true;
 
     initExtra = polybarOpts;
 

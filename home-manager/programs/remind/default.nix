@@ -21,6 +21,9 @@
 
         # Log project tracking at end of working week
         REM Friday AT 16:00 MSG Log your project tracking
+
+        # Recap the day's activities (weekdays)
+        REM Mon Tue Wed Thu Fri AT 17:00 MSG Recap the day's activities
       '';
     };
 

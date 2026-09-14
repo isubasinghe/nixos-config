@@ -35,6 +35,9 @@
       pydantic
       pytest-cov
       uv
+      matplotlib
+      networkx
+      graphviz
     ]))
     gopls
     ccls
@@ -48,6 +51,7 @@
     texlab
     java-language-server
     nixd
+    yamllint
     pkg-config
     openssl
     protobuf

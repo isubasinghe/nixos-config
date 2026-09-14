@@ -71,6 +71,11 @@ in
     Install.WantedBy = [ "graphical-session.target" ];
   };
 
+  xdg.configFile."flameshot/flameshot.ini".text = ''
+    [General]
+    useGrimAdapter=true
+  '';
+
   dconf.settings."org/gnome/desktop/default-applications/terminal" = {
     exec = "ghostty";
     exec-arg = "";

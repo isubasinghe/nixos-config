@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 
 let
   globalprotect-unwrapped = inputs.globalprotect-openconnect.packages.x86_64-linux.prebuilt;
@@ -62,6 +62,7 @@ let
 in
 {
   nixpkgs.hostPlatform = "x86_64-linux";
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "slack" ];
 
   # Ubuntu remains responsible for boot, hardware, graphics, and login. This
   # target only installs system-manager-owned, distro-neutral integration.
@@ -79,6 +80,13 @@ in
     group = "root";
     setuid = true;
     permissions = "u+rx,g+x,o+x";
+  };
+
+  security.wrappers.slack-chrome-sandbox = {
+    source = "${pkgs.slack}/lib/slack/chrome-sandbox";
+    owner = "root";
+    group = "root";
+    setuid = true;
   };
 
   environment.systemPackages = [

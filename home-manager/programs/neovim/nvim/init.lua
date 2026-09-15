@@ -25,6 +25,8 @@ vim.opt.completeopt='menuone,noselect'
 vim.opt.syntax='on'
 vim.wo.number = true
 vim.wo.relativenumber = true
+vim.opt.signcolumn = "yes:1"
+vim.opt.numberwidth = 4
 
 require("lazy").setup({
   { 'rose-pine/neovim', name='rose-pine' },

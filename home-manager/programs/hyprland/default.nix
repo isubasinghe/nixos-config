@@ -16,6 +16,12 @@ let
   hyprlock = "${hyprlockPackage}/bin/hyprlock";
   terminal = "${config.programs.wezterm.package}/bin/wezterm";
   launcher = "${rofiPackage}/bin/rofi -show drun";
+
+  # Confirmed via `hyprctl monitors`: laptop panel is eDP-1, external
+  # over your current dock/cable is DP-1. If you switch cables/docks and
+  # the external shows up as HDMI-A-1 etc., update this one line.
+  internalMonitor = "eDP-1";
+  externalMonitor = "DP-1";
 in
 {
   home.packages = with pkgs; [
@@ -52,6 +58,32 @@ in
         position = "auto",
         scale = 1,
       })
+
+      -- Pin workspaces to monitors so SUPER+1..5 always lives on the
+      -- laptop and SUPER+6..0 always lives on the external monitor.
+      -- Without `monitor`, Hyprland keeps a single global pool and
+      -- `focus workspace` pulls the workspace to the current monitor
+      -- (the swap you were seeing). With these rules, focusing a
+      -- workspace bound to the other monitor jumps focus there instead.
+      -- `persistent` keeps empty workspaces alive so each bar always
+      -- shows its own set. `default` gives each monitor a workspace to
+      -- fall back to on (re)connect.
+      for i = 1, 5 do
+        hl.workspace_rule({
+          workspace = tostring(i),
+          monitor = ${builtins.toJSON internalMonitor},
+          persistent = true,
+          default = (i == 1),
+        })
+      end
+      for i = 6, 10 do
+        hl.workspace_rule({
+          workspace = tostring(i),
+          monitor = ${builtins.toJSON externalMonitor},
+          persistent = true,
+          default = (i == 6),
+        })
+      end
 
       hl.env("GDK_BACKEND", "wayland,x11,*")
       hl.env("LIBVA_DRIVER_NAME", "iHD")
@@ -375,7 +407,8 @@ in
         format = "{name}";
         on-click = "activate";
         persistent-workspaces = {
-          "*" = 5;
+          "${internalMonitor}" = [ 1 2 3 4 5 ];
+          "${externalMonitor}" = [ 6 7 8 9 10 ];
         };
       };
       "hyprland/window" = {

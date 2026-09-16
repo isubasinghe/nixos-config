@@ -16,6 +16,13 @@
       ps.turtle
       ps.stack
       ps.language-c
+      ps.diagrams
+      ps.diagrams-cairo
+      ps.diagrams-svg
+      ps.diagrams-contrib
+      ps.megaparsec
+      ps.happy
+      ps.alex
     ]))
     gnumake
     ormolu

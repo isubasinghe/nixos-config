@@ -17,7 +17,7 @@
     parted
     gptfdisk
     gpart
-    gparted
+    gnome-disk-utility
     home-manager
     wezterm
     firefox

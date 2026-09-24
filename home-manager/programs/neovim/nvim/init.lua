@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -30,6 +33,30 @@ vim.opt.numberwidth = 4
 
 require("lazy").setup({
   { 'rose-pine/neovim', name='rose-pine' },
+  {
+    "folke/which-key.nvim",
+    lazy = false,
+    opts = {
+      triggers = {
+        { "<auto>", mode = "nxso" },
+        { "<leader>", mode = { "n", "v" } },
+      },
+      spec = {
+        { "<leader>b", group = "Buffers" },
+        { "<leader>d", group = "Debug" },
+        { "<leader>f", group = "Files" },
+        { "<leader>g", group = "Git" },
+        { "<leader>x", group = "Diagnostics" },
+      },
+    },
+    keys = {
+      {
+        "<leader>?",
+        "<cmd>WhichKey <Space><cr>",
+        desc = "Show keymaps",
+      },
+    },
+  },
   { 'nvim-treesitter/nvim-treesitter', branch="main", build=":TSUpdate" },
   { 'neovim/nvim-lspconfig' },
   { 'hrsh7th/cmp-nvim-lsp' },
@@ -46,9 +73,9 @@ require("lazy").setup({
   },
   {
     "folke/trouble.nvim",
+    cmd = "Trouble",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-    },
+    opts = {},
   },
   {"ellisonleao/glow.nvim", config = true, cmd = "Glow"},
   { 'sbdchd/neoformat' },
@@ -88,7 +115,101 @@ require("lazy").setup({
   {  'junegunn/fzf.vim' },
   { 'nvim-focus/focus.nvim', version = '*' },
   { 'ThePrimeagen/harpoon', dependencies = 'nvim-lua/plenary.nvim' },
-  { 'mfussenegger/nvim-dap' },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+      "theHamsta/nvim-dap-virtual-text",
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+
+      dapui.setup()
+      require("nvim-dap-virtual-text").setup({
+        commented = true,
+      })
+
+      local function open_dapui()
+        dapui.open()
+      end
+
+      local function close_dapui()
+        dapui.close()
+      end
+
+      dap.listeners.after.event_initialized["dapui_config"] = open_dapui
+      dap.listeners.before.event_terminated["dapui_config"] = close_dapui
+      dap.listeners.before.event_exited["dapui_config"] = close_dapui
+
+      dap.adapters.go = {
+        type = "server",
+        port = "${port}",
+        executable = {
+          command = "dlv",
+          args = { "dap", "-l", "127.0.0.1:${port}" },
+          detached = true,
+        },
+        options = {
+          initialize_timeout_sec = 20,
+        },
+      }
+
+      dap.adapters.rust = {
+        type = "executable",
+        command = "rust-gdb",
+        args = { "--interpreter=dap" },
+      }
+
+      dap.configurations.go = {
+        {
+          type = "go",
+          name = "Debug file",
+          request = "launch",
+          program = "${file}",
+        },
+        {
+          type = "go",
+          name = "Debug package",
+          request = "launch",
+          program = "${workspaceFolder}",
+        },
+        {
+          type = "go",
+          name = "Debug test",
+          request = "launch",
+          mode = "test",
+          program = "${file}",
+        },
+      }
+
+      local function rust_program()
+        return vim.fn.input(
+          "Path to Rust executable: ",
+          vim.fn.getcwd() .. "/target/debug/",
+          "file"
+        )
+      end
+
+      dap.configurations.rust = {
+        {
+          type = "rust",
+          name = "Debug executable",
+          request = "launch",
+          program = rust_program,
+          cwd = "${workspaceFolder}",
+        },
+        {
+          type = "rust",
+          name = "Debug test binary",
+          request = "launch",
+          program = rust_program,
+          cwd = "${workspaceFolder}",
+        },
+      }
+    end,
+  },
   { 'tpope/vim-fugitive' },
   { 'airblade/vim-gitgutter' },
   { 'sindrets/diffview.nvim', dependencies = 'nvim-lua/plenary.nvim' },
@@ -200,7 +321,6 @@ vim.diagnostic.config({
   virtual_lines = false,
 })
 
-vim.g.mapleader =';'
 vim.g.go_highlight_functions=1
 vim.g.go_highlight_function_calls=1
 
@@ -220,34 +340,41 @@ vim.cmd[[highlight LineNr ctermfg=Grey guifg=Grey]]
 -- to install any missing parsers.
 
 
-other_on_attach = function(_, bufnr)
+local other_on_attach = function(_, bufnr)
   vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-  local opts = { buffer = bufnr, noremap = true, silent = true }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', '<C-space>', vim.lsp.buf.hover, opts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-  vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
-  vim.keymap.set('n', '<leader>wl', function()
+  local function lsp_map(lhs, rhs, desc)
+    vim.keymap.set('n', lhs, rhs, {
+      buffer = bufnr,
+      noremap = true,
+      silent = true,
+      desc = desc,
+    })
+  end
+
+  lsp_map('gD', vim.lsp.buf.declaration, 'Go to declaration')
+  lsp_map('gd', vim.lsp.buf.definition, 'Go to definition')
+  lsp_map('K', vim.lsp.buf.hover, 'Show hover documentation')
+  lsp_map('<C-space>', vim.lsp.buf.hover, 'Show hover documentation')
+  lsp_map('gi', vim.lsp.buf.implementation, 'Go to implementation')
+  lsp_map('<C-k>', vim.lsp.buf.signature_help, 'Show signature help')
+  lsp_map('<leader>wa', vim.lsp.buf.add_workspace_folder, 'Add workspace folder')
+  lsp_map('<leader>wr', vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder')
+  lsp_map('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, opts)
-  vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
-  vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>a', vim.lsp.buf.code_action, opts)
-  -- vim.keymap.set('v', '<leader>ca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-  vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, opts)
-  vim.keymap.set('n', '<leader>sy', function()
+  end, 'List workspace folders')
+  lsp_map('<leader>D', vim.lsp.buf.type_definition, 'Go to type definition')
+  lsp_map('<leader>rn', vim.lsp.buf.rename, 'Rename symbol')
+  lsp_map('gr', vim.lsp.buf.references, 'List references')
+  lsp_map('<leader>ca', vim.lsp.buf.code_action, 'Code action')
+  lsp_map('<leader>a', vim.lsp.buf.code_action, 'Code action')
+  lsp_map('<leader>e', vim.diagnostic.open_float, 'Show line diagnostics')
+  lsp_map('[d', vim.diagnostic.goto_prev, 'Previous diagnostic')
+  lsp_map(']d', vim.diagnostic.goto_next, 'Next diagnostic')
+  lsp_map('<leader>q', vim.diagnostic.setloclist, 'Diagnostics to location list')
+  lsp_map('<leader>sy', function()
     require('telescope.builtin').lsp_document_symbols()
-  end, opts)
+  end, 'Search document symbols')
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function()
     vim.lsp.buf.format({ async = true })
   end, { desc = 'Format current buffer with LSP' })
@@ -269,9 +396,9 @@ cmp.setup({
           fallback()
         end
       end,
-      ['<S-Tab'] = function(fallback)
+      ['<S-Tab>'] = function(fallback)
         if cmp.visible() then 
-          cmp.select_next_item()
+          cmp.select_prev_item()
         else 
           fallback()
         end
@@ -361,54 +488,63 @@ require'nvim-web-devicons'.setup {
 
 require('kommentary.config').use_extended_mappings()
 
-vim.api.nvim_set_keymap('', '<space>ff', ':NvimTreeToggle<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>gg', ':Neogit<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>mk', ':Neomake!<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>dd', ':lua require("dapui").toggle()<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>rl', ':s/', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>rg', ':%s/', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>bp', ':bp<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<space>bn', ':bn<cr>', { silent = true, noremap = true })
+local map_opts = { silent = true, noremap = true }
+local function normal_map(lhs, rhs, desc)
+  vim.keymap.set('n', lhs, rhs, vim.tbl_extend('force', map_opts, { desc = desc }))
+end
 
-vim.api.nvim_set_keymap('', '<leader>br', ':lua require("dap").toggle_breakpoint()<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<leader>cn', ':lua require("dap").continue()<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<leader>so', ':lua require("dap").step_over()<cr>', { silent = true, noremap = true })
-vim.api.nvim_set_keymap('', '<leader>si', ':lua require("dap").step_into()<cr>', { silent = true, noremap = true })
+normal_map('<leader>ff', '<cmd>NvimTreeToggle<cr>', 'Toggle file tree')
+normal_map('<leader>gg', '<cmd>Neogit<cr>', 'Open Git client')
+normal_map('<leader>mk', function()
+  require('lint').try_lint()
+end, 'Run linter')
+normal_map('<leader>rl', ':s/', 'Search and replace on line')
+normal_map('<leader>rg', ':%s/', 'Search and replace in buffer')
+normal_map('<leader>bp', '<cmd>bp<cr>', 'Previous buffer')
+normal_map('<leader>bn', '<cmd>bn<cr>', 'Next buffer')
+normal_map('<leader>bk', function()
+  require('harpoon.mark').add_file()
+end, 'Add file to Harpoon')
+normal_map('<leader>bkc', function()
+  require('harpoon.mark').clear_all()
+end, 'Clear Harpoon marks')
+normal_map('<leader>bm', function()
+  require('harpoon.ui').toggle_quick_menu()
+end, 'Open Harpoon menu')
+normal_map('<leader>fd', '<cmd>FZF<cr>', 'Open FZF')
 
-vim.api.nvim_set_keymap("", "<space>xx", "<cmd>Trouble<cr>",
-  {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("", "<space>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>",
-  {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("", "<space>xd", "<cmd>Trouble lsp_document_diagnostics<cr>",
-  {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("", "<space>xl", "<cmd>Trouble loclist<cr>",
-  {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("", "<space>xq", "<cmd>Trouble quickfix<cr>",
-  {silent = true, noremap = true}
-)
-vim.api.nvim_set_keymap("", "gR", "<cmd>Trouble lsp_references<cr>",
-  {silent = true, noremap = true}
-)
+local dap = require('dap')
+local dapui = require('dapui')
+normal_map('<leader>db', dap.toggle_breakpoint, 'Toggle breakpoint')
+normal_map('<leader>dB', function()
+  dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
+end, 'Set conditional breakpoint')
+normal_map('<leader>dc', dap.continue, 'Continue debugging')
+normal_map('<leader>di', dap.step_into, 'Step into')
+normal_map('<leader>do', dap.step_over, 'Step over')
+normal_map('<leader>dO', dap.step_out, 'Step out')
+normal_map('<leader>dp', dap.pause, 'Pause debugging')
+normal_map('<leader>dr', dap.restart, 'Restart debugging')
+normal_map('<leader>dt', dap.terminate, 'Terminate debugging')
+normal_map('<leader>du', dapui.toggle, 'Toggle debugger UI')
+normal_map('<leader>dd', dapui.toggle, 'Toggle debugger UI')
+vim.keymap.set('x', '<leader>de', dapui.eval, vim.tbl_extend('force', map_opts, {
+  desc = 'Evaluate selection',
+}))
+normal_map('<leader>de', dapui.eval, 'Evaluate expression')
 
-vim.api.nvim_set_keymap("", '<space>bk', ':lua require("harpoon.mark").add_file()<cr>',
-  {silent = true, noremap = true}
-)
+-- Keep the original debugger shortcuts as aliases.
+normal_map('<leader>br', dap.toggle_breakpoint, 'Toggle breakpoint')
+normal_map('<leader>cn', dap.continue, 'Continue debugging')
+normal_map('<leader>so', dap.step_over, 'Step over')
+normal_map('<leader>si', dap.step_into, 'Step into')
 
-vim.api.nvim_set_keymap("", '<space>bkc', ':lua require("harpoon.mark").clear_all()<cr>',
-  {silent = true, noremap = true}
-)
-
-vim.api.nvim_set_keymap("", '<space>bm', ':lua require("harpoon.ui").toggle_quick_menu()<cr>',
-  {silent = true, noremap = true}
-)
-
-vim.api.nvim_set_keymap("", '<space>fd', ':FZF<cr>',
-  {silent = true, noremap = true}
-)
+normal_map('<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', 'Diagnostics (Trouble)')
+normal_map('<leader>xw', '<cmd>Trouble diagnostics toggle<cr>', 'Workspace diagnostics (Trouble)')
+normal_map('<leader>xd', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', 'Buffer diagnostics (Trouble)')
+normal_map('<leader>xl', '<cmd>Trouble loclist toggle<cr>', 'Location list (Trouble)')
+normal_map('<leader>xq', '<cmd>Trouble qflist toggle<cr>', 'Quickfix list (Trouble)')
+normal_map('gR', '<cmd>Trouble lsp_references toggle<cr>', 'References (Trouble)')
 
 
 

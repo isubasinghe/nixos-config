@@ -85,7 +85,7 @@
     _1password-gui
     parted
     gpart
-    gparted
+    gnome-disk-utility
     git
     gcc
     cmake

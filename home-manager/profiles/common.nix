@@ -1,5 +1,5 @@
 # Shared home-manager profile applied to all home configurations
-{ inputs, outputs, lib, pkgs, ... }:
+{ inputs, outputs, lib, config, pkgs, ... }:
 
 {
   imports = [
@@ -19,6 +19,8 @@
   };
 
   programs.home-manager.enable = true;
+
+  home.packages = lib.mkIf (!config.targets.genericLinux.enable) [ pkgs.gnome-disk-utility ];
 
   programs.git = {
     enable = true;

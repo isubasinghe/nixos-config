@@ -9,6 +9,7 @@
 
 let
   flameshotPackage = config.lib.nixGL.wrap pkgs.flameshot;
+  gnomeDisksPackage = config.lib.nixGL.wrap pkgs.gnome-disk-utility;
 in
 {
   imports = [
@@ -48,9 +49,18 @@ in
     stateVersion = "24.05";
   };
 
+  home.sessionPath = [ "/opt/vivado/2026.1/Vivado/bin" ];
+  home.sessionVariablesExtra = lib.mkAfter ''
+    export PATH="/opt/vivado/2026.1/Vivado/bin:$PATH"
+  '';
+  programs.zsh.initContent = lib.mkAfter ''
+    path+=(/opt/vivado/2026.1/Vivado/bin)
+  '';
+
   # This application is intentionally limited to the Dell Home Manager target.
   home.packages = [
     flameshotPackage
+    gnomeDisksPackage
     (config.lib.nixGL.wrap pkgs.slack)
     pkgs.openvpn
     pkgs.networkmanager-openvpn

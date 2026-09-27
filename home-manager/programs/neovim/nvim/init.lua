@@ -1,5 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.lean_config = {
+  abbreviations = { builtin = true },
+  mappings = true,
+}
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -255,7 +259,9 @@ require("lazy").setup({
   {
     "susliko/tla.nvim",
     config = function ()
-      require("tla").setup()
+      require("tla").setup {
+        java_executable = vim.fn.exepath("java"),
+      }
     end
   },
   {'florentc/vim-tla'},
@@ -459,13 +465,8 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 
--- Idris2 
+-- Idris2
 require('idris2').setup({})
-
-require('lean').setup{
-  abbreviations = { builtin = true },
-  mappings = true,
-}
 
 
 vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')

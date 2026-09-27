@@ -1,5 +1,5 @@
 # Home-manager configuration for Pop!_OS (standalone, no X11/WM modules)
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, lib, ... }:
 
 {
   imports = [
@@ -30,6 +30,11 @@
     exec = "ghostty";
     exec-arg = "";
   };
+
+  programs.zsh.initContent = lib.mkAfter ''
+    export GOPATH="/home/isubasinghe/go"
+    export PATH="$GOPATH/bin:$PATH"
+  '';
 
   home.stateVersion = "24.05";
 }

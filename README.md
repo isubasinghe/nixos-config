@@ -8,6 +8,27 @@
 ### Home-manager config 
 `home-manager switch --flake .#username@hostname`
 
+For the first installation, run the following from this repository to use the
+matching Home Manager and Nixpkgs versions in `flake.lock`:
+
+```sh
+hm_source=$(nix eval --impure --raw --expr '(builtins.getFlake (toString ./.)).inputs.home-manager.outPath')
+hm_nixpkgs=$(nix eval --impure --raw --expr '(builtins.getFlake (toString ./.)).inputs.nixpkgs.outPath')
+NIX_PATH="home-manager=$hm_source:nixpkgs=$hm_nixpkgs" nix-shell '<home-manager>' -A install
+```
+
+This bootstraps Home Manager using `~/.config/home-manager/home.nix`. Then apply
+this repository's configuration, for example on Pop!_OS:
+
+```sh
+home-manager switch --flake .#isubasinghe@pop-os
+```
+
+Set `NIX_PATH` so the installer's child processes also use the pinned versions.
+Running `nix-shell '<home-manager>' -A install` without this override uses your
+channels instead of `flake.lock`. A newer Home Manager channel paired with an
+older Nixpkgs channel can fail with `attribute 'genAttrs\u0027' missing`.
+
 ## CLI tools reference
 
 Packages come from `home-manager/packages/cli-tools.nix` (all hosts) and a few

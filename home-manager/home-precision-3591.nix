@@ -90,4 +90,42 @@ in
     exec = "ghostty";
     exec-arg = "";
   };
+
+  # Pull Outlook -> ~/Mail/sqc every 5 min. Uses the cached gpg passphrase,
+  # so unlock `pass` once in a terminal after login (any `hm-sync` run).
+  systemd.user.services.hm-sync = {
+    Unit.Description = "Sync Outlook mail to local Maildir";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "%h/.nix-profile/bin/hm-sync";
+    };
+  };
+
+  systemd.user.timers.hm-sync = {
+    Unit.Description = "Sync Outlook mail periodically";
+    Timer = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "5min";
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
+
+  # Pull M365 calendar -> khal vdir every 15 min. Reuses the ortie/sqc token
+  # (already has Calendars.Read); needs `pass` unlocked like hm-sync.
+  systemd.user.services.hm-cal-sync = {
+    Unit.Description = "Sync M365 calendar to khal vdir";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "%h/.nix-profile/bin/hm-cal-sync";
+    };
+  };
+
+  systemd.user.timers.hm-cal-sync = {
+    Unit.Description = "Sync M365 calendar periodically";
+    Timer = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "15min";
+    };
+    Install.WantedBy = [ "timers.target" ];
+  };
 }

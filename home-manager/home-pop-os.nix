@@ -1,5 +1,5 @@
 # Home-manager configuration for Pop!_OS (standalone, no X11/WM modules)
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -21,6 +21,9 @@
   home = {
     username = "isubasinghe";
     homeDirectory = "/home/isubasinghe";
+    packages = [
+      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    ];
   };
 
   dconf.settings."org/gnome/desktop/default-applications/terminal" = {

@@ -49,12 +49,16 @@ in
     stateVersion = "24.05";
   };
 
-  home.sessionPath = [ "/opt/vivado/2026.1/Vivado/bin" ];
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+    "/opt/vivado/2026.1/Vivado/bin"
+  ];
   home.sessionVariablesExtra = lib.mkAfter ''
     export PATH="/opt/vivado/2026.1/Vivado/bin:$PATH"
   '';
   programs.zsh.initContent = lib.mkAfter ''
-    path+=(/opt/vivado/2026.1/Vivado/bin)
+    path=($HOME/.local/bin $path /opt/vivado/2026.1/Vivado/bin)
+    typeset -U path
   '';
 
   # This application is intentionally limited to the Dell Home Manager target.

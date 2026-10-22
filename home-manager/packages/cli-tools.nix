@@ -26,6 +26,7 @@
     gh
     gitui
     docker-client
+    docker-compose
     jq
     lsof
     ouch

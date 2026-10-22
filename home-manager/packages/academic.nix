@@ -17,6 +17,11 @@ in
     texlive.combined.scheme-full
     typst
     pandoc
+    poppler-utils
+    mupdf
+    qpdf
+    tesseract
+    ocrmypdf
     zathura
     tikzit
     racket

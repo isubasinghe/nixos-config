@@ -69,6 +69,7 @@ in
     pkgs.openvpn
     pkgs.networkmanager-openvpn
     pkgs.act
+    pkgs.devcontainer
   ];
 
   systemd.user.services.flameshot = {

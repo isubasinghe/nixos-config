@@ -166,6 +166,22 @@ require("lazy").setup({
         args = { "--interpreter=dap" },
       }
 
+      -- GDB 14+ has a built-in DAP server. Used for C and C++.
+      dap.adapters.gdb = {
+        type = "executable",
+        command = "gdb",
+        args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+      }
+
+      -- debugpy comes from the Nix python3 environment (packages/dev-tools.nix).
+      -- Prefer that interpreter, because a virtualenv python3 usually has no debugpy.
+      local nix_python = vim.fn.expand("~/.nix-profile/bin/python3")
+      dap.adapters.python = {
+        type = "executable",
+        command = vim.fn.executable(nix_python) == 1 and nix_python or "python3",
+        args = { "-m", "debugpy.adapter" },
+      }
+
       dap.configurations.go = {
         {
           type = "go",
@@ -210,6 +226,66 @@ require("lazy").setup({
           request = "launch",
           program = rust_program,
           cwd = "${workspaceFolder}",
+        },
+      }
+
+      local function c_program()
+        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+      end
+
+      dap.configurations.c = {
+        {
+          type = "gdb",
+          name = "Debug executable",
+          request = "launch",
+          program = c_program,
+          cwd = "${workspaceFolder}",
+          stopAtBeginningOfMainSubprogram = false,
+        },
+        {
+          type = "gdb",
+          name = "Attach to process",
+          request = "attach",
+          pid = function()
+            return require("dap.utils").pick_process()
+          end,
+          cwd = "${workspaceFolder}",
+        },
+      }
+      dap.configurations.cpp = dap.configurations.c
+
+      dap.configurations.python = {
+        {
+          type = "python",
+          name = "Debug file",
+          request = "launch",
+          program = "${file}",
+          cwd = "${workspaceFolder}",
+          console = "integratedTerminal",
+          -- Run the program with the active virtualenv, if there is one.
+          pythonPath = function()
+            local venv = os.getenv("VIRTUAL_ENV")
+            if venv and vim.fn.executable(venv .. "/bin/python") == 1 then
+              return venv .. "/bin/python"
+            end
+            return vim.fn.exepath("python3")
+          end,
+        },
+      }
+
+      -- The "scala" adapter is registered by metals.setup_dap() on attach.
+      dap.configurations.scala = {
+        {
+          type = "scala",
+          name = "Run or test file",
+          request = "launch",
+          metals = { runType = "runOrTestFile" },
+        },
+        {
+          type = "scala",
+          name = "Test target",
+          request = "launch",
+          metals = { runType = "testTarget" },
         },
       }
     end,
@@ -458,7 +534,10 @@ vim.lsp.enable(servers)
 
 local metals_config = require("metals").bare_config()
 metals_config.capabilities = capabilities
-metals_config.on_attach = other_on_attach
+metals_config.on_attach = function(client, bufnr)
+  other_on_attach(client, bufnr)
+  require("metals").setup_dap()
+end
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "scala", "sbt", "java" },
   callback = function() require("metals").initialize_or_attach(metals_config) end,

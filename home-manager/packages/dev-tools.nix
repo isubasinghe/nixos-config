@@ -1,5 +1,5 @@
 # Development tools: languages, LSPs, compilers, build tools
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -45,6 +45,7 @@
       matplotlib
       networkx
       graphviz
+      debugpy
     ]))
     gopls
     ccls
@@ -52,6 +53,7 @@
     pyright
     gofumpt
     delve
+    gdb
     gdlv
     gotools
     clang-tools
@@ -77,4 +79,16 @@
     jetbrains.idea
     valgrind
   ];
+
+  # The nixpkgs rustup writes its own store path into the ld.lld wrapper of
+  # each toolchain that it installs. After a rustup update and a garbage
+  # collection, that path is gone and the toolchain cannot link. Point the
+  # wrappers of all installed toolchains at the current rustup on each switch.
+  home.activation.fixRustupLdWrappers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for d in "$HOME"/.rustup/toolchains/*/lib/rustlib/*/bin; do
+      [ -f "$d/gcc-ld-unwrapped/ld.lld" ] && [ -f "$d/gcc-ld/ld.lld" ] || continue
+      run ${pkgs.gnused}/bin/sed -i -E \
+        's|/nix/store/[a-z0-9]{32}-rustup-[^/]+/|${pkgs.rustup}/|' "$d/gcc-ld/ld.lld"
+    done
+  '';
 }

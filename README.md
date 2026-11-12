@@ -129,6 +129,14 @@ agenda: `remind ~/.reminders`. Reminders fire as critical notifications via
 (`custom.remind.workReminders = true`); other hosts just get the binary.
 Never edit `~/.reminders` directly - it is a symlink into the nix store.
 
+**Calendar reminders** — with `custom.remind.calendarReminders = true`
+(precision laptop only), each timed event in the khal calendars gets a
+notification 10 and 5 minutes before the start, and at the start. The
+`calendar-reminders` timer writes the events of the next 7 days to
+`~/.local/state/calendar-reminders/calendar.rem` every 5 minutes, and the
+`remind-calendar` daemon reads that file. All-day and cancelled events get
+no notification.
+
 **Mail** — himalaya's msgraph backend pulls tokens from ortie, which stores
 them in `pass` as `ortie/sqc` (never edit that entry by hand). First-time
 auth: `ortie auth get -a sqc`. Both `~/.config/himalaya/config.toml` and

@@ -31,6 +31,7 @@ in
   ];
 
   custom.remind.workReminders = true;
+  custom.remind.calendarReminders = true;
   custom.hyprland.docsearch.enable = true;
 
   programs.git.settings.user.email = "isitha.subasinghe@sqc.com";

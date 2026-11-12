@@ -62,7 +62,7 @@
 
   systemd.user.startServices = "sd-switch";
 
-  colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.porple;
+  colorscheme = lib.mkDefault inputs.nix-colors.colorSchemes.isotope;
 
   home.file.".stack/config.yaml".source = ../programs/stack/config.yaml;
 

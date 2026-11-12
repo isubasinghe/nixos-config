@@ -278,6 +278,8 @@ in
       hl.window_rule({ match = { class = "blueman-manager" }, float = true })
       hl.window_rule({ match = { class = "pavucontrol" }, float = true })
       hl.window_rule({ match = { class = "firefox" }, opacity = "1.0 override" })
+      -- No transparency for the terminal, so that a black background is pure black.
+      hl.window_rule({ match = { class = "org.wezfurlong.wezterm" }, opacity = "1.0 override" })
 
       hl.layer_rule({
         match = { namespace = "waybar" },

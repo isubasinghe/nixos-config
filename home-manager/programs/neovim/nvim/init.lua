@@ -62,28 +62,20 @@ require("lazy").setup({
     },
   },
   {
-    "0xdeadf1sh/AssemblyForNeovim",
-    cmd = "Asm",
-    keys = {
-      { "<leader>A", mode = "n", desc = "Show assembly for function" },
-      { "<leader>A", mode = "x", desc = "Show assembly for selection" },
+    "NickTsaizer/splitasm.nvim",
+    cmd = {
+      "SplitAsm",
+      "SplitAsmOpen",
+      "SplitAsmSetup",
+      "SplitAsmConfig",
+      "SplitAsmToggleSync",
+      "SplitAsmToggleLineNumbers",
+      "SplitAsmToggleHideAddress",
     },
-    config = function()
-      require("asm").setup()
-
-      -- Upstream hardcodes <leader>a; move its mappings to preserve LSP code actions.
-      -- Keep the upstream callback so normal mode still finds the enclosing function.
-      for _, mode in ipairs({ "n", "x" }) do
-        local mapping = vim.tbl_filter(function(map)
-          return map.lhs == vim.g.mapleader .. "a"
-        end, vim.api.nvim_get_keymap(mode))[1]
-        vim.keymap.set(mode, "<leader>A", mapping.callback or mapping.rhs, {
-          silent = true,
-          desc = mode == "n" and "Show assembly for function" or "Show assembly for selection",
-        })
-        vim.keymap.del(mode, "<leader>a")
-      end
-    end,
+    keys = {
+      { "<leader>A", "<cmd>SplitAsmOpen<cr>", desc = "Show assembly split" },
+    },
+    opts = {},
   },
   { 'nvim-treesitter/nvim-treesitter', branch="main", build=":TSUpdate" },
   { 'neovim/nvim-lspconfig' },

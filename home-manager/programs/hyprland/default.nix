@@ -24,6 +24,8 @@ let
   externalMonitor = "DP-1";
 in
 {
+  imports = [ ./docsearch.nix ];
+
   home.packages = with pkgs; [
     brightnessctl
     grim

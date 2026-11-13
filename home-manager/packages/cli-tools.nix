@@ -1,6 +1,75 @@
 # CLI tools: terminal utilities, shell enhancements, file tools
 { pkgs, unstable, inputs, ... }:
 
+let
+  cha = "${unstable.chawan}/bin/cha";
+
+  # Speculative page download for newsboat.
+  #   newsboat-page prefetch <url>  Downloads the page, its stylesheets and its
+  #                                 images to the cache, in the background.
+  #   newsboat-page open <url>      Opens the cached copy in Chawan if it is
+  #                                 complete. If not, opens the URL.
+  # A cached copy is kept for one day.
+  newsboatPage = pkgs.writeShellApplication {
+    name = "newsboat-page";
+    runtimeInputs = with pkgs; [
+      coreutils
+      findutils
+      gnugrep
+      gnused
+      util-linux
+      wget
+    ];
+    text = ''
+      mode=''${1:-}
+      url=''${2:-}
+      [ -n "$url" ] || exit 0
+
+      cache="''${XDG_CACHE_HOME:-$HOME/.cache}/newsboat-prefetch"
+      dir="$cache/$(printf '%s' "$url" | sha256sum | cut -c1-32)"
+
+      case "$mode" in
+        prefetch)
+          mkdir -p "$cache"
+          find "$cache" -mindepth 1 -maxdepth 1 -type d -mmin +1440 -exec rm -rf {} +
+          # If the directory exists, a download is complete or in progress.
+          mkdir "$dir" 2>/dev/null || exit 0
+          setsid -f "$0" fetch "$url" >/dev/null 2>&1
+          ;;
+        fetch)
+          cd "$dir"
+          # Fonts, scripts and media are not used in a terminal. The quota and
+          # the timeout put a limit on the cost of one page.
+          LC_ALL=C timeout 45 wget \
+            --page-requisites --convert-links --adjust-extension \
+            --span-hosts --no-directories \
+            --reject '*.js,*.mjs,*.woff,*.woff2,*.ttf,*.otf,*.eot,*.mp4,*.webm,*.mov,*.mp3,*.ogg,*.zip,*.pdf' \
+            --quota=15m -e robots=off --timeout=8 --tries=1 --compression=auto \
+            --no-verbose --output-file=wget.log "$url" || true
+          # wget converts the links only when it comes to its end. A copy
+          # without the FINISHED line is not complete.
+          main=$(sed -n 's/^.* URL:.* -> "\(.*\)" \[1\]$/\1/p' wget.log | head -n 1)
+          if grep -q '^FINISHED' wget.log && [ -n "$main" ] && [ -f "$main" ]; then
+            printf '%s\n' "$dir/$main" >.done
+          fi
+          ;;
+        open)
+          if [ -f "$dir/.done" ]; then
+            main=$(cat "$dir/.done")
+            if [ -f "$main" ]; then
+              exec ${cha} "$main"
+            fi
+          fi
+          exec ${cha} "$url"
+          ;;
+        *)
+          echo "newsboat-page: unknown mode '$mode'. Use: newsboat-page prefetch|open <url>" >&2
+          exit 2
+          ;;
+      esac
+    '';
+  };
+in
 {
   home.packages = with pkgs; [
     inputs.ortie.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -68,6 +137,8 @@
     libqalculate
     khal
     vdirsyncer
+    w3m
+    unstable.chawan
     unstable.himalaya
     (writeShellScriptBin "hm-mail" ''
       set -euo pipefail
@@ -264,6 +335,14 @@
 
   xdg.dataFile."calendars/personal/.keep".text = "";
   xdg.dataFile."calendars/outlook/.keep".text = "";
+
+  # Links open in Chawan, in the same terminal. Enter on an article starts a
+  # download of the linked page in the background, so that "o" can open the
+  # local copy immediately. See newsboatPage above.
+  xdg.configFile."newsboat/config".text = ''
+    browser "${newsboatPage}/bin/newsboat-page open %u"
+    bind <ENTER> articlelist set browser "${newsboatPage}/bin/newsboat-page prefetch %u" ; open-in-browser-noninteractively ; set browser "${newsboatPage}/bin/newsboat-page open %u" ; open
+  '';
 
   xdg.configFile."newsboat/urls".text = ''
     https://news.ycombinator.com/rss

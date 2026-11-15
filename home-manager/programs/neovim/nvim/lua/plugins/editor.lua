@@ -95,5 +95,9 @@ return {
       { "<leader>A", "<cmd>SplitAsmOpen<cr>", desc = "Show assembly split" },
     },
     opts = {},
+    config = function(_, opts)
+      require("splitasm").setup(opts)
+      require("config.splitasm").setup()
+    end,
   },
 }

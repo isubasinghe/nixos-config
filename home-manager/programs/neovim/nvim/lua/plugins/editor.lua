@@ -74,6 +74,16 @@ return {
     -- stylua: ignore
   },
   {
+    "isubasinghe/scratchmacro",
+    main = "scratchmacro",
+    cmd = { "ScratchMacro", "ScratchMacros" },
+    opts = {},
+    keys = {
+      { "<leader>sm", "<cmd>ScratchMacro<cr>", desc = "Macro scratchpad" },
+      { "<leader>sM", "<cmd>ScratchMacros<cr>", desc = "Macro library" },
+    },
+  },
+  {
     "folke/trouble.nvim",
     cmd = "Trouble",
     dependencies = { "nvim-tree/nvim-web-devicons" },

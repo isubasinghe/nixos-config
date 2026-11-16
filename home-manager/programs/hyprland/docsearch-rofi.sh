@@ -1,30 +1,26 @@
-# A rofi script mode for docsearch.
+# A rofi-blocks program for docsearch. It searches again after each keystroke.
 #
-# Use: rofi -modi "docs:docsearch-rofi" -show docs
+# Use: rofi -modi blocks -show blocks -blocks-wrap docsearch-rofi
 #
-# 1. Type a query. Press Enter. The script shows the results.
-# 2. Move to a result. Press Enter. The script opens the document.
+# 1. Type a query. The results change while you type.
+# 2. Move to a result. Press Enter. The program opens the document.
 #    A GitHub file or a web page opens in the browser. A local file opens in
-#    the default program. For other locations, the script copies the location.
-# 3. To search again, type a new query and press Ctrl+Enter.
+#    the default program. For other locations, the program copies the location.
 #
-# rofi calls the script with ROFI_RETV=0 at the start, with ROFI_RETV=2 and the
-# typed text as $1 for a new query, and with ROFI_RETV=1 and ROFI_INFO set to
-# the location for a selected result.
+# rofi-blocks starts this program one time. The program writes one JSON object
+# on each output line to set the rofi content. rofi-blocks writes one JSON
+# event on each input line: "input change" has the typed text in .value, and
+# "select entry" has the location of the result in .data. rofi closes when
+# this program stops.
 
 # docsearch is in the cargo directory. A Hyprland session does not have it in PATH.
 export PATH="$HOME/.cargo/bin:$PATH"
 
 MAX_RESULTS=30
+HELP='Type a query. Syntax: "exact phrase", AND, OR, NOT, title:word, word~1'
 
-header() {
-  printf '\0prompt\x1fdocs\n'
-  printf '\0markup-rows\x1ftrue\n'
-}
-
-message() {
-  printf '\0message\x1f%s\n' "$1"
-}
+errors=$(mktemp)
+trap 'rm -f "$errors"' EXIT
 
 # Escape text for Pango markup.
 escape() {
@@ -43,42 +39,60 @@ open_location() {
     printf '%s' "$location" | wl-copy >/dev/null 2>&1 || true
     return 0
   fi
-  # rofi waits until the script closes its output. Start the program detached.
+  # Start the program detached, because rofi closes when this program stops.
   setsid -f xdg-open "$url" >/dev/null 2>&1 || true
 }
 
 search() {
-  local query=$1 json errors warnings count
-  errors=$(mktemp)
-  trap 'rm -f "$errors"' RETURN
-  header
+  local query=$1 json warnings count text
+  if [[ -z ${query//[[:space:]]/} ]]; then
+    jq -cn --arg message "$HELP" '{message: $message, lines: []}'
+    return 0
+  fi
   if ! json=$(docsearch search --json -n "$MAX_RESULTS" -- "$query" 2>"$errors"); then
-    message "<span foreground='#ff6c6b'>$(escape "$(sed -e 's/^error: //' "$errors" | head -n 3)")</span>"
+    # A query can be incorrect while you type it, for example an open quote.
+    # Show the error and keep the last results.
+    text="<span foreground='#ff6c6b'>$(escape "$(sed -e 's/^error: //' "$errors" | head -n 3)")</span>"
+    jq -cn --arg message "$text" '{message: $message}'
     return 0
   fi
   warnings=$(sed -n 's/^warning: //p' "$errors" | head -n 2)
   count=$(jq 'length' <<<"$json")
   if [[ $count -eq 0 ]]; then
-    message "No results for <b>$(escape "$query")</b>. Type a new query and press Ctrl+Enter."
-    return 0
+    text="No results for <b>$(escape "$query")</b>."
+  else
+    text="$count results for <b>$(escape "$query")</b>. Enter opens."
   fi
-  local text
-  text="$count results for <b>$(escape "$query")</b>. Enter opens. Ctrl+Enter searches again."
   if [[ -n $warnings ]]; then
     text+=$'\n'"<i>$(escape "$warnings")</i>"
   fi
-  message "$text"
-  jq -r '
+  jq -c --arg message "$text" '
     def esc: gsub("&";"&amp;") | gsub("<";"&lt;") | gsub(">";"&gt;");
-    .[] | "<b>\(.title | esc)</b>  <small>[\(.category | esc)]  \(.location | esc)</small>\u0000info\u001f\(.location)"
+    {
+      message: $message,
+      lines: map({
+        text: "<b>\(.title | esc)</b>  <small>[\(.category | esc)]  \(.location | esc)</small>",
+        markup: true,
+        data: .location
+      })
+    }
   ' <<<"$json"
 }
 
-case "${ROFI_RETV:-0}" in
-  1) open_location "${ROFI_INFO:-}" ;;
-  2) search "${1:-}" ;;
-  *)
-    header
-    message 'Type a query and press Enter. Syntax: "exact phrase", AND, OR, NOT, title:word, word~1'
-    ;;
-esac
+# "input action": "send" stops the rofi filter and sends each change of the
+# typed text to this program.
+jq -cn --arg message "$HELP" \
+  '{prompt: "docs", "input action": "send", message: $message, lines: []}'
+
+while IFS= read -r event; do
+  name=$(jq -r '.name // ""' <<<"$event" 2>/dev/null) || continue
+  case "$name" in
+    "input change")
+      search "$(jq -r '.value // ""' <<<"$event")"
+      ;;
+    "select entry")
+      open_location "$(jq -r '.data // ""' <<<"$event")"
+      exit 0
+      ;;
+  esac
+done

@@ -17,11 +17,13 @@ let
   terminal = "${config.programs.wezterm.package}/bin/wezterm";
   launcher = "${rofiPackage}/bin/rofi -show drun";
 
-  # Confirmed via `hyprctl monitors`: laptop panel is eDP-1, external
-  # over your current dock/cable is DP-1. If you switch cables/docks and
-  # the external shows up as HDMI-A-1 etc., update this one line.
+  # The laptop panel is always eDP-1. The external monitor name depends
+  # on the cable/dock (DP-1 at the office, HDMI-A-1 at home), so the
+  # Hyprland config finds it at runtime. `externalMonitors` is only the
+  # list of names that waybar knows about; add a name here if a new
+  # connector shows up in `hyprctl monitors`.
   internalMonitor = "eDP-1";
-  externalMonitor = "DP-1";
+  externalMonitors = [ "DP-1" "DP-2" "HDMI-A-1" ];
 in
 {
   imports = [ ./docsearch.nix ];
@@ -78,14 +80,36 @@ in
           default = (i == 1),
         })
       end
-      for i = 6, 10 do
-        hl.workspace_rule({
-          workspace = tostring(i),
-          monitor = ${builtins.toJSON externalMonitor},
-          persistent = true,
-          default = (i == 6),
-        })
+      -- The external monitor has a different connector name at each
+      -- desk, so do not hardcode it. Bind workspaces 6..10 to the first
+      -- monitor that is not the laptop panel, and do this again each
+      -- time a monitor is connected or disconnected.
+      local internal = ${builtins.toJSON internalMonitor}
+      local function bind_external_workspaces()
+        local external = nil
+        for _, m in ipairs(hl.get_monitors()) do
+          if m.name ~= internal then
+            external = m.name
+            break
+          end
+        end
+        for i = 6, 10 do
+          hl.workspace_rule({
+            workspace = tostring(i),
+            monitor = external or ${builtins.toJSON (builtins.head externalMonitors)},
+            persistent = true,
+            default = (i == 6),
+          })
+          -- Workspaces that already exist stay on their old monitor
+          -- unless they are moved.
+          if external and hl.get_workspace(i) then
+            hl.dispatch(hl.dsp.workspace.move({ workspace = i, monitor = external }))
+          end
+        end
       end
+      bind_external_workspaces()
+      hl.on("monitor.added", bind_external_workspaces)
+      hl.on("monitor.removed", bind_external_workspaces)
 
       hl.env("GDK_BACKEND", "wayland,x11,*")
       hl.env("LIBVA_DRIVER_NAME", "iHD")
@@ -412,8 +436,7 @@ in
         on-click = "activate";
         persistent-workspaces = {
           "${internalMonitor}" = [ 1 2 3 4 5 ];
-          "${externalMonitor}" = [ 6 7 8 9 10 ];
-        };
+        } // pkgs.lib.genAttrs externalMonitors (_: [ 6 7 8 9 10 ]);
       };
       "hyprland/window" = {
         format = "{title}";

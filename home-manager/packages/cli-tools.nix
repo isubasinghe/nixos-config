@@ -140,6 +140,23 @@ in
     w3m
     unstable.chawan
     unstable.himalaya
+    # IRC client. The commands in "init" run at each start: they set the
+    # default nick and add the servers. No server connects automatically.
+    # In weechat, "/connect <name>" connects to one server, and
+    # "/server list" shows all names. "/mute" hides the "server already
+    # exists" messages on the second and later starts.
+    (weechat.override {
+      configure = { ... }: {
+        init = ''
+          /mute /set irc.server_default.nicks "isubasinghe,isubasinghe_"
+          /mute /set irc.server_default.username "isubasinghe"
+          /mute /server add libera irc.libera.chat/6697 -tls
+          /mute /server add oftc irc.oftc.net/6697 -tls
+          /mute /server add hackint irc.hackint.org/6697 -tls
+          /mute /server add rizon irc.rizon.net/6697 -tls
+        '';
+      };
+    })
     (writeShellScriptBin "hm-mail" ''
       set -euo pipefail
       box="''${1:-INBOX}"
@@ -336,6 +353,13 @@ in
   xdg.dataFile."calendars/personal/.keep".text = "";
   xdg.dataFile."calendars/outlook/.keep".text = "";
 
+  # Home page of Chawan for "cha -V". The lite page of DuckDuckGo is used
+  # because the main page shows nothing when JavaScript is off.
+  xdg.configFile."chawan/config.toml".text = ''
+    [start]
+    visual-home = "https://lite.duckduckgo.com/lite/"
+  '';
+
   # Links open in Chawan, in the same terminal. Enter on an article starts a
   # download of the linked page in the background, so that "o" can open the
   # local copy immediately. See newsboatPage above.
@@ -410,6 +434,90 @@ in
     auto_view text/html
     auto_view application/pdf
     alternative_order text/plain text/enriched text/html
+
+    # Vim keys. The keys "g", "d", "z" and "Z" start key sequences, thus their
+    # default one-key functions are removed first.
+    bind generic,index,pager,attach,browser,compose g noop
+    bind generic,index,pager,attach,browser z noop
+    bind generic,index,pager,attach,browser Z noop
+    bind index,pager,attach d noop
+
+    # Movement in lists.
+    bind generic,index,attach,browser,compose j next-entry
+    bind generic,index,attach,browser,compose k previous-entry
+    bind generic,index,attach,browser,compose gg first-entry
+    bind generic,index,attach,browser,compose G last-entry
+    bind generic,index,attach,browser \Cd half-down
+    bind generic,index,attach,browser \Cu half-up
+    bind generic,index,attach,browser \Cf next-page
+    bind generic,index,attach,browser \Cb previous-page
+    bind generic,index,attach,browser \Ce next-line
+    bind generic,index,attach,browser \Cy previous-line
+    bind generic,index,attach,browser H top-page
+    bind generic,index,attach,browser M middle-page
+    bind generic,index,attach,browser L bottom-page
+    bind generic,index,attach,browser zt current-top
+    bind generic,index,attach,browser zz current-middle
+    bind generic,index,attach,browser zb current-bottom
+
+    # Movement in the message text.
+    set pager_stop = yes
+    bind pager j next-line
+    bind pager k previous-line
+    bind pager gg top
+    bind pager G bottom
+    bind pager \Cd half-down
+    bind pager \Cu half-up
+    bind pager \Cf next-page
+    bind pager \Cb previous-page
+    bind pager \Ce next-line
+    bind pager \Cy previous-line
+
+    # Search.
+    bind generic,index,pager,attach,browser / search
+    bind generic,index,pager,attach,browser ? search-reverse
+    bind generic,index,pager,attach,browser n search-next
+    bind generic,index,pager,attach,browser N search-opposite
+
+    # "l" opens the item. "h" goes back.
+    bind index l display-message
+    bind pager l view-attachments
+    bind attach l view-attach
+    bind browser l select-entry
+    bind pager,attach h exit
+    bind browser h goto-parent
+
+    # Delete and undo.
+    bind index,pager dd delete-message
+    bind index,pager dt delete-thread
+    bind attach dd delete-entry
+    bind index,pager u undelete-message
+    bind index,pager gu undelete-thread
+
+    # Folds, paragraphs, marks and selection.
+    bind index za collapse-thread
+    bind index zA collapse-all
+    bind index \} next-thread
+    bind index \{ previous-thread
+    bind index m mark-message
+    bind index V tag-entry
+
+    # Command line and exit.
+    bind generic,index,pager,attach,browser : enter-command
+    bind index ZZ quit
+    bind index ZQ exit
+    bind pager,attach,browser ZZ exit
+    bind editor \Cb bol
+    bind editor \Ce eol
+
+    # New positions for the default functions that the Vim keys replaced.
+    bind index,pager gr group-reply
+    bind index,pager gm mail
+    bind index gn toggle-new
+    bind pager gn mark-as-new
+    bind index,pager \Cn sidebar-next
+    bind index,pager \Cp sidebar-prev
+    bind index,pager \Co sidebar-open
   '';
 
   home.file.".mailcap".text = ''

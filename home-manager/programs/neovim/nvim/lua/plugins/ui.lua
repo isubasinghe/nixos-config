@@ -1,5 +1,31 @@
--- Interface: keymap hints, status line, icons, indent guides, window focus.
+-- Interface: keymap hints, status line, icons, indent guides, window focus,
+-- floating terminals.
+
+-- One ikhal terminal for the session. When ikhal stops (key: q), the next
+-- toggle starts it again.
+local ikhal_term
+local function toggle_ikhal()
+  if not ikhal_term then
+    ikhal_term = require("toggleterm.terminal").Terminal:new({
+      cmd = "ikhal",
+      direction = "float",
+      hidden = true,
+      float_opts = { border = "rounded" },
+    })
+  end
+  ikhal_term:toggle()
+end
+
 return {
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    cmd = { "ToggleTerm", "TermExec" },
+    opts = {},
+    keys = {
+      { "<leader>k", toggle_ikhal, desc = "Toggle calendar (ikhal)" },
+    },
+  },
   {
     "folke/which-key.nvim",
     lazy = false,

@@ -26,6 +26,51 @@ end, 'Clear Harpoon marks')
 normal_map('<leader>bm', function()
   require('harpoon.ui').toggle_quick_menu()
 end, 'Open Harpoon menu')
+-- Programs in a terminal buffer. One buffer is kept for each program: the
+-- keymap goes back to it if the program is in operation. When the program
+-- stops, its buffer is deleted.
+local term_bufs = {}
+local function toggle_term_buf(cmd)
+  local key = table.concat(cmd, ' ')
+  local buf = term_bufs[key]
+  if buf and vim.api.nvim_buf_is_valid(buf) then
+    vim.api.nvim_set_current_buf(buf)
+  else
+    vim.cmd.enew()
+    buf = vim.api.nvim_get_current_buf()
+    term_bufs[key] = buf
+    vim.fn.jobstart(cmd, {
+      term = true,
+      on_exit = function()
+        if vim.api.nvim_buf_is_valid(buf) then
+          vim.api.nvim_buf_delete(buf, { force = true })
+        end
+      end,
+    })
+  end
+  vim.cmd.startinsert()
+end
+
+-- "cha -V" opens the home page from the Chawan config.
+normal_map('<leader>bw', function()
+  toggle_term_buf({ 'cha', '-V' })
+end, 'Open web browser (cha)')
+-- neomutt reads the local Maildir. "hm-sync" in a shell gets new mail.
+normal_map('<leader>be', function()
+  toggle_term_buf({ 'neomutt' })
+end, 'Open email (neomutt)')
+-- newsboat opens links in cha, in the same terminal buffer.
+normal_map('<leader>bf', function()
+  toggle_term_buf({ 'newsboat' })
+end, 'Open RSS feeds (newsboat)')
+normal_map('<leader>bi', function()
+  toggle_term_buf({ 'weechat' })
+end, 'Open IRC (weechat)')
+
+-- Short key to go from terminal mode to normal mode. The program in the
+-- terminal continues. The default key is <C-\><C-n>.
+vim.keymap.set('t', '<C-Space>', '<C-\\><C-n>', { silent = true, noremap = true, desc = 'Go to normal mode' })
+
 normal_map('<leader>fd', '<cmd>FZF<cr>', 'Open FZF')
 
 normal_map('<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', 'Diagnostics (Trouble)')

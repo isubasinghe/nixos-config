@@ -23,7 +23,7 @@ return {
     cmd = { "ToggleTerm", "TermExec" },
     opts = {},
     keys = {
-      { "<leader>k", toggle_ikhal, desc = "Toggle calendar (ikhal)" },
+      { "<leader>bk", toggle_ikhal, desc = "Toggle calendar (ikhal)" },
     },
   },
   {
@@ -39,6 +39,7 @@ return {
         { "<leader>d", group = "Debug" },
         { "<leader>f", group = "Files" },
         { "<leader>g", group = "Git" },
+        { "<leader>h", group = "Harpoon" },
         { "<leader>x", group = "Diagnostics" },
       },
     },

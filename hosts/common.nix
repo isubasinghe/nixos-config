@@ -95,7 +95,7 @@
 
   fonts.fontconfig.enable = true;
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    nerd-fonts.jetbrains-mono
   ];
 
   programs.dconf.enable = true;

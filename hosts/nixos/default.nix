@@ -5,7 +5,7 @@
   imports = [
     ../common.nix
     ./hardware.nix
-    ./xmonad.nix
+    ./hyprland.nix
   ];
 
   networking.hostName = "nixos";

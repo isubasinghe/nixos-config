@@ -73,7 +73,7 @@
             inherit pkgs;
             extraSpecialArgs = { inherit inputs outputs unstable; };
             modules = [
-              ./home-manager/home.nix
+              ./home-manager/home-nixos.nix
             ];
           };
         "isithas@vb-100" =

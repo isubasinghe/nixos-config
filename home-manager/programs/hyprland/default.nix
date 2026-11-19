@@ -16,14 +16,6 @@ let
   hyprlock = "${hyprlockPackage}/bin/hyprlock";
   terminal = "${config.programs.wezterm.package}/bin/wezterm";
   launcher = "${rofiPackage}/bin/rofi -show drun";
-
-  # The laptop panel is always eDP-1. The external monitor name depends
-  # on the cable/dock (DP-1 at the office, HDMI-A-1 at home), so the
-  # Hyprland config finds it at runtime. `externalMonitors` is only the
-  # list of names that waybar knows about; add a name here if a new
-  # connector shows up in `hyprctl monitors`.
-  internalMonitor = "eDP-1";
-  externalMonitors = [ "DP-1" "DP-2" "HDMI-A-1" ];
 in
 {
   imports = [ ./docsearch.nix ];
@@ -38,8 +30,28 @@ in
     swaybg
     wl-clipboard
     rofiPackage
+    flameshotPackage
     bluemanPackage
   ];
+
+  systemd.user.services.flameshot = {
+    Unit = {
+      Description = "Flameshot screenshot tool";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${flameshotPackage}/bin/flameshot";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  xdg.configFile."flameshot/flameshot.ini".text = ''
+    [General]
+    useGrimAdapter=true
+  '';
 
   wayland.systemd.target = "hyprland-session.target";
 
@@ -63,56 +75,7 @@ in
         scale = 1,
       })
 
-      -- Pin workspaces to monitors so SUPER+1..5 always lives on the
-      -- laptop and SUPER+6..0 always lives on the external monitor.
-      -- Without `monitor`, Hyprland keeps a single global pool and
-      -- `focus workspace` pulls the workspace to the current monitor
-      -- (the swap you were seeing). With these rules, focusing a
-      -- workspace bound to the other monitor jumps focus there instead.
-      -- `persistent` keeps empty workspaces alive so each bar always
-      -- shows its own set. `default` gives each monitor a workspace to
-      -- fall back to on (re)connect.
-      for i = 1, 5 do
-        hl.workspace_rule({
-          workspace = tostring(i),
-          monitor = ${builtins.toJSON internalMonitor},
-          persistent = true,
-          default = (i == 1),
-        })
-      end
-      -- The external monitor has a different connector name at each
-      -- desk, so do not hardcode it. Bind workspaces 6..10 to the first
-      -- monitor that is not the laptop panel, and do this again each
-      -- time a monitor is connected or disconnected.
-      local internal = ${builtins.toJSON internalMonitor}
-      local function bind_external_workspaces()
-        local external = nil
-        for _, m in ipairs(hl.get_monitors()) do
-          if m.name ~= internal then
-            external = m.name
-            break
-          end
-        end
-        for i = 6, 10 do
-          hl.workspace_rule({
-            workspace = tostring(i),
-            monitor = external or ${builtins.toJSON (builtins.head externalMonitors)},
-            persistent = true,
-            default = (i == 6),
-          })
-          -- Workspaces that already exist stay on their old monitor
-          -- unless they are moved.
-          if external and hl.get_workspace(i) then
-            hl.dispatch(hl.dsp.workspace.move({ workspace = i, monitor = external }))
-          end
-        end
-      end
-      bind_external_workspaces()
-      hl.on("monitor.added", bind_external_workspaces)
-      hl.on("monitor.removed", bind_external_workspaces)
-
       hl.env("GDK_BACKEND", "wayland,x11,*")
-      hl.env("LIBVA_DRIVER_NAME", "iHD")
       hl.env("MOZ_ENABLE_WAYLAND", "1")
       hl.env("NIXOS_OZONE_WL", "1")
       hl.env("QT_QPA_PLATFORM", "wayland;xcb")
@@ -434,9 +397,6 @@ in
       "hyprland/workspaces" = {
         format = "{name}";
         on-click = "activate";
-        persistent-workspaces = {
-          "${internalMonitor}" = [ 1 2 3 4 5 ];
-        } // pkgs.lib.genAttrs externalMonitors (_: [ 6 7 8 9 10 ]);
       };
       "hyprland/window" = {
         format = "{title}";

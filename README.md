@@ -114,7 +114,24 @@ module-specific ones noted below.
 | `pandoc` | universal document converter |
 | `zathura` | minimal PDF viewer |
 
-### Hyprland session (precision laptop)
+### Hyprland session (NixOS desktop and Precision laptop)
+
+The `nixos` desktop shares Precision's Hyprland theme, keybindings, Rofi,
+Waybar, notifications, clipboard, screenshots, and idle locking. DocSearch,
+the Intel VA-API override, and laptop monitor assignments remain Precision-only.
+Pop!_OS and `vb-100` keep their existing configurations.
+
+On the NixOS desktop, apply both configurations:
+
+```sh
+sudo nixos-rebuild switch --flake .#nixos
+home-manager switch --flake .#isithas@nixos
+```
+
+Log out and select **Hyprland** at the login screen. NixOS manages the session,
+NVIDIA driver, desktop portals, and Hyprlock authentication; Home Manager manages
+the desktop settings and user services.
+
 `grim` + `slurp` (screenshots), `wl-clipboard` + `cliphist` (clipboard +
 history), `brightnessctl`, `swaync-client -t` (notifications),
 `nm-connection-editor` (network).

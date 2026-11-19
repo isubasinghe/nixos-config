@@ -36,6 +36,9 @@ in
 
   programs.git.settings.user.email = "isitha.subasinghe@sqc.com";
 
+  nix.package = pkgs.nix;
+  nix.settings.max-jobs = "auto";
+
   targets.genericLinux.enable = true;
   targets.genericLinux.nixGL = {
     packages = inputs.nixgl.packages;

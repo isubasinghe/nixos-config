@@ -8,7 +8,8 @@ return {
       local lsp = require('config.lsp')
       local capabilities = lsp.capabilities()
 
-      local servers = {'ocamllsp', 'ts_ls', 'pyright', 'texlab', 'gopls', 'terraformls', 'zls', 'verible', 'nixd', 'ccls', 'rust_analyzer', 'idris2_lsp', 'leanls'}
+      -- idris2-nvim configures and enables idris2_lsp with its custom handlers.
+      local servers = {'ocamllsp', 'ts_ls', 'pyright', 'texlab', 'gopls', 'terraformls', 'zls', 'verible', 'nixd', 'ccls', 'rust_analyzer', 'agda_ls', 'leanls'}
 
       for _, server in ipairs(servers) do
         local config = {
@@ -65,10 +66,16 @@ return {
   -- lean.nvim reads vim.g.lean_config, which is set in lua/config/options.lua.
   { 'Julian/lean.nvim' },
   {
-    'ShinKage/idris2-nvim',
+    'idris-community/idris2-nvim',
     dependencies = {'neovim/nvim-lspconfig', 'MunifTanjim/nui.nvim'},
     config = function()
-      require('idris2').setup({})
+      local lsp = require('config.lsp')
+      require('idris2').setup({
+        server = {
+          on_attach = lsp.on_attach,
+          capabilities = lsp.capabilities(),
+        },
+      })
     end,
   },
   --[[ {

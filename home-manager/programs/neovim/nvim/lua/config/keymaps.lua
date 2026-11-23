@@ -55,6 +55,20 @@ end
 normal_map('<leader>bw', function()
   toggle_term_buf({ 'cha', '-V' })
 end, 'Open web browser (cha)')
+vim.keymap.set('x', '<leader>bw', function()
+  local selection = vim.fn.getregion(
+    vim.fn.getpos('v'),
+    vim.fn.getpos('.'),
+    {
+      type = vim.fn.mode(),
+      exclusive = vim.o.selection == 'exclusive',
+    }
+  )
+  local url = vim.trim(table.concat(selection, '\n'))
+  if url ~= '' then
+    toggle_term_buf({ 'cha', '--', url })
+  end
+end, { silent = true, desc = 'Open selected URL in cha' })
 -- neomutt reads the local Maildir. "hm-sync" in a shell gets new mail.
 normal_map('<leader>be', function()
   toggle_term_buf({ 'neomutt' })

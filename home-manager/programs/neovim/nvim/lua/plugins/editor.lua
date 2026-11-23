@@ -1,4 +1,4 @@
--- Navigation and editing: file tree, finders, motions, comments, search.
+-- Navigation and editing: file tree, finders, motions, text objects, search.
 return {
   {
     "nvim-tree/nvim-tree.lua",
@@ -18,7 +18,7 @@ return {
     end,
   },
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.4',
+    'nvim-telescope/telescope.nvim', version = '*',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       require('telescope').setup{
@@ -61,9 +61,30 @@ return {
       url = "https://codeberg.org/andyg/leap.nvim",
   },
   {
-    'b3nj5m1n/kommentary',
-    config = function()
-      require('kommentary.config').use_extended_mappings()
+    'nvim-mini/mini.ai',
+    opts = {},
+  },
+  {
+    'nvim-mini/mini.surround',
+    opts = {
+      -- Keep s/S free for Leap in Normal mode.
+      mappings = {
+        add = 'ys',
+        delete = 'ds',
+        replace = 'cs',
+        find = '',
+        find_left = '',
+        highlight = '',
+      },
+    },
+    config = function(_, opts)
+      require('mini.surround').setup(opts)
+      vim.keymap.del('x', 'ys')
+      vim.keymap.set('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], {
+        silent = true,
+        desc = 'Surround selection',
+      })
+      vim.keymap.set('n', 'yss', 'ys_', { remap = true, desc = 'Surround line' })
     end,
   },
   {

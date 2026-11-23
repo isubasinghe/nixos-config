@@ -29,6 +29,42 @@ Running `nix-shell '<home-manager>' -A install` without this override uses your
 channels instead of `flake.lock`. A newer Home Manager channel paired with an
 older Nixpkgs channel can fail with `attribute 'genAttrs\u0027' missing`.
 
+### Neovim plugins
+
+Plugin versions are tracked in
+`home-manager/programs/neovim/nvim/lazy-lock.json`. Home Manager deploys this
+configuration, but does not update the plugin checkouts in
+`~/.local/share/nvim/lazy`.
+
+From this repository, update plugins using the writable source configuration:
+
+```sh
+XDG_CONFIG_HOME="$PWD/home-manager/programs/neovim" nvim --headless '+Lazy! update' '+qa!'
+```
+
+Review the lockfile diff, then apply your Home Manager configuration and restart
+Neovim. To sync installed plugins to the tracked versions instead, use the same
+command with `'+Lazy! restore'`. Running these commands against the source keeps
+Lazy from trying to write the read-only lockfile deployed by Home Manager.
+
+Editing shortcuts (`<leader>` is Space):
+
+| Keys | Action |
+|---|---|
+| `ysiw)` / `yss)` | Surround a word / line with parentheses |
+| `cs)"` / `ds"` | Change parentheses to quotes / remove surrounding quotes |
+| Visual `S` then a delimiter | Surround the selection |
+| `cia` / `daa` | Change inside an argument / delete an argument (mini.ai) |
+| `gc{motion}` / `gcc` | Comment a motion / line using native Neovim commenting |
+| `]c` / `[c` | Next / previous Git hunk (native motions in diff windows) |
+| `<leader>gs` / `<leader>gr` | Stage or unstage / reset a hunk or visual selection |
+| `<leader>gp` | Preview the Git hunk |
+| `<leader>gb` / `<leader>gB` | Blame the current line / buffer |
+| `ih` | Git hunk text object |
+| Visual `<leader>bw` | Open the selected URL in Chawan (`cha`) |
+
+Leap retains `s` and Normal-mode `S`; Harpoon retains `<leader>h` mappings.
+
 ## CLI tools reference
 
 Packages come from `home-manager/packages/cli-tools.nix` (all hosts) and a few
@@ -37,7 +73,7 @@ module-specific ones noted below.
 ### AI agents
 | Tool | Description |
 |---|---|
-| `codex` | OpenAI coding agent |
+| `codex` | OpenAI coding agent (cached Nixpkgs unstable package) |
 | `opencode` | terminal coding agent |
 | `copilot` | GitHub Copilot CLI (`copilot suggest`, `copilot explain`) |
 

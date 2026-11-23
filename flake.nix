@@ -20,14 +20,12 @@
 
     attic.url = "github:zhaofengli/attic";
 
-    llm-agents.url = "github:numtide/llm-agents.nix";
-
     ortie.url = "github:pimalaya/ortie";
 
     globalprotect-openconnect.url = "github:yuezk/GlobalProtect-openconnect";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, llm-agents, system-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, nix-colors, system-manager, ... }@inputs:
     let
       inherit (self) outputs;
     in

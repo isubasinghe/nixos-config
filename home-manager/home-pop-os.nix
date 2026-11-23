@@ -31,7 +31,6 @@
     username = "isubasinghe";
     homeDirectory = "/home/isubasinghe";
     packages = [
-      inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
       (config.lib.nixGL.wrap pkgs.gnome-disk-utility)
     ];
   };

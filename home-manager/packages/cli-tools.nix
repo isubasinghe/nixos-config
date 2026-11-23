@@ -73,6 +73,8 @@ in
 {
   home.packages = with pkgs; [
     inputs.ortie.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # Use cached Nixpkgs unstable; llm-agents can trigger a large Rust build.
+    unstable.codex
     opencode
     github-copilot-cli
     bat

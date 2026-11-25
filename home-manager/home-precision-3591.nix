@@ -16,6 +16,14 @@ let
   internalMonitor = "eDP-1";
   externalMonitors = [ "DP-1" "DP-2" "HDMI-A-1" ];
   gnomeDisksPackage = config.lib.nixGL.wrap pkgs.gnome-disk-utility;
+  # nixGL.wrap wraps only the files in bin/, and the portal daemon is in
+  # libexec/. This launcher puts the daemon in bin/ so that it gets the
+  # nixGL environment. Without it, the daemon cannot load the GBM driver.
+  hyprlandPortalLauncher = config.lib.nixGL.wrap (
+    pkgs.writeShellScriptBin "xdg-desktop-portal-hyprland" ''
+      exec ${config.wayland.windowManager.hyprland.finalPortalPackage}/libexec/xdg-desktop-portal-hyprland "$@"
+    ''
+  );
 in
 {
   imports = [
@@ -60,24 +68,32 @@ in
       })
     end
     -- The external monitor has a different connector name at each
-    -- desk, so do not hardcode it. Bind workspaces 6..10 to the first
-    -- monitor that is not the laptop panel, and do this again each
-    -- time a monitor is connected or disconnected.
+    -- desk, so do not hardcode it. Find the monitors that are not the
+    -- laptop panel, in left-to-right order. With one external monitor,
+    -- bind workspaces 6..10 to it. With two, bind 6..8 to the left
+    -- monitor and 9..10 to the right monitor. Do this again each time
+    -- a monitor is connected or disconnected.
     local internal = ${builtins.toJSON internalMonitor}
     local function bind_external_workspaces()
-      local external = nil
+      local externals = {}
       for _, m in ipairs(hl.get_monitors()) do
         if m.name ~= internal then
-          external = m.name
-          break
+          table.insert(externals, m)
         end
       end
+      table.sort(externals, function(a, b) return a.x < b.x end)
+      local first = externals[1] and externals[1].name
+      local second = externals[2] and externals[2].name
       for i = 6, 10 do
+        local external = first
+        if second and i >= 9 then
+          external = second
+        end
         hl.workspace_rule({
           workspace = tostring(i),
           monitor = external or ${builtins.toJSON (builtins.head externalMonitors)},
           persistent = true,
-          default = (i == 6),
+          default = (i == 6) or (second ~= nil and i == 9),
         })
         -- Workspaces that already exist stay on their old monitor
         -- unless they are moved.
@@ -91,11 +107,42 @@ in
     hl.on("monitor.removed", bind_external_workspaces)
 
     hl.env("LIBVA_DRIVER_NAME", "iHD")
+
+    -- The Lenovo LOQ 32Q-10 is a 2560x1440 panel. Its EDID also has
+    -- 1920x1080@165 and 3840x2160@60, so `preferred` gives 60 Hz and
+    -- `highrr`/`highres` select a mode that is not native. Match the
+    -- monitor by description, because the connector name changes.
+    hl.monitor({
+      output = "desc:Lenovo Group Limited LOQ 32Q-10",
+      mode = "2560x1440@60",
+      position = "auto",
+      scale = 1,
+    })
   '';
 
   programs.waybar.settings.mainBar."hyprland/workspaces".persistent-workspaces = {
     "${internalMonitor}" = [ 1 2 3 4 5 ];
   } // lib.genAttrs externalMonitors (_: [ 6 7 8 9 10 ]);
+
+  # Screen sharing needs the Hyprland portal backend. The Ubuntu user
+  # systemd manager does not search ~/.nix-profile/share/systemd/user, so
+  # D-Bus activation of the packaged unit fails with "Unit not found".
+  # Define the unit here, which installs it in ~/.config/systemd/user.
+  systemd.user.services.xdg-desktop-portal-hyprland = {
+    Unit = {
+      Description = "Portal service (Hyprland implementation)";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+      ConditionEnvironment = "WAYLAND_DISPLAY";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.impl.portal.desktop.hyprland";
+      ExecStart = "${hyprlandPortalLauncher}/bin/xdg-desktop-portal-hyprland";
+      Restart = "on-failure";
+      Slice = "session.slice";
+    };
+  };
 
   programs.git.settings.user.email = "isitha.subasinghe@sqc.com";
 
